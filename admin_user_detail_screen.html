@@ -1,0 +1,313 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ユーザー詳細 - スキマパーク管理</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .btn-danger {
+        background: #d32f2f;
+        color: #fff;
+      }
+      .btn-danger:hover {
+        background: #c62828;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+      .icon-btn:hover {
+        background: #e0e0e0;
+      }
+      .section {
+        padding: 40px 0;
+      }
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .section-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #222;
+      }
+      .view-all {
+        color: #2e7d32;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .view-all:hover {
+        text-decoration: underline;
+      }
+      .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: #2e7d32;
+      }
+      .form-group {
+        margin-bottom: 16px;
+        text-align: left;
+      }
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: #555;
+      }
+      .detail-box {
+        background: #fff;
+        border-radius: 8px;
+        padding: 32px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .detail-actions {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="ユーザ一覧画面.html" class="logo">スキマパーク (管理画面)</a>
+        <div class="header-nav">
+          <a href="問い合わせ一覧画面.html" class="btn btn-secondary"
+            >問い合わせ一覧</a
+          >
+          <a href="#" class="btn btn-primary">新規ユーザー追加</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <a href="logout.html" class="btn btn-secondary">ログアウト</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="section">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">ユーザー詳細</h2>
+            <a href="ユーザ一覧画面.html" class="view-all"
+              >← ユーザー一覧に戻る</a
+            >
+          </div>
+
+          <div class="detail-box">
+            <form>
+              <div class="form-group">
+                <label for="user_icon">アイコン画像</label>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                  <div style="width: 80px; height: 80px; border-radius: 50%; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 32px;">👤</div>
+                  <input type="file" id="user_icon" class="form-control" style="max-width: 400px;" />
+                </div>
+              </div>
+              
+              <div class="form-grid">
+                <div>
+                  <div class="form-group">
+                    <label for="login_id">ログインID</label>
+                    <input
+                      type="text"
+                      id="login_id"
+                      class="form-control"
+                      value="tanaka_taro"
+                      readonly
+                      style="background: #f9f9f9"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="user_name">ユーザ名</label>
+                    <input
+                      type="text"
+                      id="user_name"
+                      class="form-control"
+                      value="田中 太郎"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="user_email">メールアドレス</label>
+                    <input
+                      type="email"
+                      id="user_email"
+                      class="form-control"
+                      value="tanaka.taro@example.com"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">電話番号</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      class="form-control"
+                      value="090-1234-5678"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="birthday">生年月日</label>
+                    <input
+                      type="date"
+                      id="birthday"
+                      class="form-control"
+                      value="1990-04-15"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div class="form-group">
+                    <label for="gender">性別</label>
+                    <select id="gender" class="form-control">
+                      <option value="male" selected>男性</option>
+                      <option value="female">女性</option>
+                      <option value="other">その他</option>
+                      <option value="not_specified">未設定</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="birthday_public">生年月日の公開設定</label>
+                    <select id="birthday_public" class="form-control">
+                      <option value="public">公開</option>
+                      <option value="private" selected>非公開</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="gender_public">性別の公開設定</label>
+                    <select id="gender_public" class="form-control">
+                      <option value="public" selected>公開</option>
+                      <option value="private">非公開</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="status">ステータス</label>
+                    <select id="status" class="form-control">
+                      <option value="active" selected>有効</option>
+                      <option value="suspended">利用停止中</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="bio">自己紹介</label>
+                <textarea
+                  id="bio"
+                  class="form-control"
+                  rows="4"
+                  placeholder="自己紹介を入力してください"
+                >都内在住のフリーランスエンジニアです。週末に空きスペースを探しています。</textarea>
+              </div>
+
+              <div class="detail-actions">
+                <button type="button" class="btn btn-danger">削除する</button>
+                <button type="submit" class="btn btn-primary">更新する</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

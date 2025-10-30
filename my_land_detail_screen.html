@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>貸出中詳細 | スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      main {
+        padding: 40px 0 60px;
+      }
+      .page-header {
+        margin-bottom: 28px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .page-header h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #222;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #e8f5e9;
+        color: #2e7d32;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+      }
+      .panel {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 24px;
+      }
+      .panel h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 16px;
+      }
+      .info-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .info-table th,
+      .info-table td {
+        text-align: left;
+        padding: 10px 0;
+        border-bottom: 1px dashed #e0e0e0;
+        font-size: 14px;
+      }
+      .info-table th {
+        width: 160px;
+        color: #666;
+        font-weight: 500;
+      }
+      .timeline {
+        display: grid;
+        gap: 12px;
+      }
+      .timeline-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 12px 16px;
+        border-radius: 8px;
+        background: #f1f8e9;
+        border: 1px solid #c5e1a5;
+      }
+      .timeline-date {
+        font-size: 13px;
+        font-weight: 600;
+        color: #2e7d32;
+        min-width: 120px;
+      }
+      .reservation-list {
+        display: grid;
+        gap: 16px;
+      }
+      .reservation-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 16px;
+        display: grid;
+        gap: 8px;
+        background: #fafafa;
+      }
+      .reservation-card strong {
+        color: #2e7d32;
+      }
+      .sticky {
+        position: sticky;
+        top: 88px;
+        display: grid;
+        gap: 20px;
+      }
+      .status-box {
+        background: #e8f5e9;
+        border: 1px solid #c5e1a5;
+        border-radius: 8px;
+        padding: 18px;
+        display: grid;
+        gap: 12px;
+      }
+      .status-box strong {
+        font-size: 16px;
+        color: #1b5e20;
+      }
+      .note {
+        font-size: 13px;
+        color: #666;
+      }
+      @media (max-width: 960px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .sticky {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="home_screen.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="land_register_form_screen.html" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="container">
+        <div class="page-header">
+          <div>
+            <h1>貸出中詳細</h1>
+            <p style="color: #555; margin-top: 6px">
+              公開中の土地に対する予約状況や利用者情報を確認できます。掲載を停止
+              する場合は公開ステータスを変更してください。
+            </p>
+          </div>
+          <div class="badge">公開中 / 募集中</div>
+        </div>
+
+        <div class="layout">
+          <div class="panel" style="display: grid; gap: 24px">
+            <section>
+              <h2>募集概要</h2>
+              <table class="info-table">
+                <tr>
+                  <th>土地名</th>
+                  <td>都市型ポップアップスペース</td>
+                </tr>
+                <tr>
+                  <th>所在地</th>
+                  <td>東京都中央区日本橋1-2-3</td>
+                </tr>
+                <tr>
+                  <th>面積</th>
+                  <td>80㎡</td>
+                </tr>
+                <tr>
+                  <th>設備</th>
+                  <td>電源3口 / Wi-Fi / 簡易キッチン / 折り畳みテーブル10台</td>
+                </tr>
+                <tr>
+                  <th>賃料</th>
+                  <td>¥20,000 / 日（税込別途相談）</td>
+                </tr>
+                <tr>
+                  <th>受付期間</th>
+                  <td>2025/10/01 〜 2025/12/31</td>
+                </tr>
+              </table>
+            </section>
+
+            <section>
+              <h2>直近の貸出スケジュール</h2>
+              <div class="reservation-list">
+                <div class="reservation-card">
+                  <div><strong>2025/10/05 - 2025/10/07</strong></div>
+                  <div>利用者: 株式会社イベントラボ（法人）</div>
+                  <div>用途: 新製品ポップアップストア</div>
+                  <div>対応状況: 利用完了 / レビュー待ち</div>
+                </div>
+                <div class="reservation-card">
+                  <div><strong>2025/10/12 - 2025/10/13</strong></div>
+                  <div>利用者: 佐藤恵美 様（個人）</div>
+                  <div>用途: ハンドメイドマルシェ</div>
+                  <div>対応状況: 入金済み / 利用待ち</div>
+                </div>
+                <div class="reservation-card">
+                  <div><strong>2025/10/24 - 2025/10/26</strong></div>
+                  <div>利用者: GrowGreen大学サークル</div>
+                  <div>用途: 地域交流エキスポ</div>
+                  <div>対応状況: 見積り承認待ち</div>
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2>アクティビティログ</h2>
+              <div class="timeline">
+                <div class="timeline-item">
+                  <div class="timeline-date">2025/10/20 09:42</div>
+                  <div>
+                    利用者から利用報告と写真がアップロードされました。レビュー依頼を送信しています。
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-date">2025/10/15 18:15</div>
+                  <div>
+                    佐藤恵美 様より入金が確認され、利用が確定しました。 DMで集合時間を連絡済みです。
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <div class="timeline-date">2025/10/10 11:02</div>
+                  <div>
+                    新規問い合わせが届きました。追加料金の見積もりを送信済みです。
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <aside class="sticky">
+            <div class="panel" style="display: grid; gap: 12px">
+              <h2>ダッシュボード</h2>
+              <div style="display: flex; justify-content: space-between; font-size: 14px">
+                <span>累計閲覧数</span>
+                <strong>1,284</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 14px">
+                <span>今月の問い合わせ</span>
+                <strong>12件</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 14px">
+                <span>現在のいいね数</span>
+                <strong>128人</strong>
+              </div>
+              <a href="dm-list.html" class="btn btn-secondary" style="justify-content: center">DMを確認</a>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+      <footer>
+      <div class=\"container\">
+        <div class=\"footer-content\">
+          <div class=\"footer-logo\">スキマパーク</div>
+          <div class=\"footer-links\">
+            <a href=\"#\" class=\"footer-link\">利用規約</a>
+            <a href=\"#\" class=\"footer-link\">プライバシーポリシー</a>
+            <a href=\"#\" class=\"footer-link\">ヘルプ</a>
+            <a href=\"#\" class=\"footer-link\">お問い合わせ</a>
+          </div>
+        </div>
+        <div class=\"footer-copyright\">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

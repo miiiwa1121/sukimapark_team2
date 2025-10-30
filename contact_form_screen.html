@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>お問い合わせ - スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      /* index.htmlから流用した基本スタイル */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        text-decoration: none; /* <a>タグ用に念のため追加 */
+      }
+      .icon-btn:hover {
+        background: #e0e0e0;
+      }
+      .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+      }
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: #555;
+      }
+      .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: #2e7d32;
+      }
+      
+      /* 問い合わせフォーム専用のスタイル */
+
+      /* ▼▼▼ 修正 ▼▼▼ */
+      .title-wrapper {
+        position: relative;
+        margin-bottom: 24px;
+      }
+      .back-link {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-size: 24px; /* タイトルとサイズ感を合わせる */
+        font-weight: 700;
+        color: #333;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+      }
+      .back-link:hover {
+        color: #2e7d32;
+      }
+      .page-title {
+        font-size: 24px;
+        font-weight: 700;
+        /* margin-bottom: 24px; を .title-wrapper へ移動 */
+        color: #222;
+        text-align: center;
+      }
+      /* ▲▲▲ 修正 ▲▲▲ */
+
+      .form-wrapper {
+        background: #fff;
+        border-radius: 8px;
+        padding: 32px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        max-width: 700px;
+        margin: 40px auto;
+      }
+      textarea.form-control {
+        min-height: 200px;
+        resize: vertical;
+      }
+
+      /* === 修正点 1 (CSS) === */
+      .form-actions {
+        display: flex;
+        justify-content: center; /* ボタンを中央寄せに変更 */
+        /* gap: 16px; を削除 */
+        margin-top: 24px;
+        /* position: relative; を削除 */
+      }
+      .form-actions .btn {
+        flex: none; 
+        padding: 12px 32px; 
+        font-size: 16px;
+        font-weight: 600;
+      }
+      /* .btn-cancel のスタイル定義を削除 */
+      /* === 修正点 1 (ここまで) === */
+
+      /* レスポンシブ対応 */
+      @media (max-width: 768px) {
+        .form-wrapper {
+          padding: 24px;
+          margin: 20px auto;
+        }
+
+        /* === 修正点 2 (CSS) === */
+        .form-actions {
+          flex-direction: column; /* スマホでは縦並び */
+          /* position: static; を削除 */
+        }
+        .form-actions .btn {
+           width: 100%; /* スマホでは幅いっぱいに */
+           padding: 12px; /* パディングをデフォルトに戻す */
+        }
+        /* .btn-primary と .btn-cancel の order 指定を削除 */
+        /* === 修正点 2 (ここまで) === */
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="#" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="#" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+                <a href="home_screen.html" class="btn btn-secondary">戻る</a></div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <div class="form-wrapper">
+
+          <div class="title-wrapper">
+            <button type="button" class="back-link" onclick="history.back()">
+              &lt;
+            </button>
+            <h1 class="page-title">お問い合わせ</h1>
+          </div>
+          <form action="home_screen.html" method="post" onsubmit="alert('お問い合わせを送信しました'); return true;">
+            <div class="form-group">
+              <label for="subject">主題</label>
+              <input
+                type="text"
+                id="subject"
+                class="form-control"
+                placeholder="例: 〇〇の土地について, 不具合の報告"
+                required
+                maxlength="100" />
+            </div>
+
+            <div class="form-group">
+              <label for="message">問い合わせ内容</label>
+              <textarea
+                id="message"
+                class="form-control"
+                placeholder="お問い合わせ内容を具体的にご記入ください"
+                required
+                maxlength="1000" ></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                入力内容の確認へ
+              </button>
+            </div>
+            </form>
+        </div>
+      </div>
+    </main>
+      <footer>
+      <div class=\"container\">
+        <div class=\"footer-content\">
+          <div class=\"footer-logo\">スキマパーク</div>
+          <div class=\"footer-links\">
+            <a href=\"#\" class=\"footer-link\">利用規約</a>
+            <a href=\"#\" class=\"footer-link\">プライバシーポリシー</a>
+            <a href=\"#\" class=\"footer-link\">ヘルプ</a>
+            <a href=\"#\" class=\"footer-link\">お問い合わせ</a>
+          </div>
+        </div>
+        <div class=\"footer-copyright\">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

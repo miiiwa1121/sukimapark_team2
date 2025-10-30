@@ -1,0 +1,599 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>レビューを投稿する - スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-block;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+      .icon-btn:hover {
+        background: #e0e0e0;
+      }
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #2e7d32;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 20px;
+      }
+      .back-link:hover {
+        text-decoration: underline;
+      }
+      .section {
+        padding: 40px 0;
+      }
+      .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+      .review-summary {
+        background: #f1f8e9;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-left: 4px solid #2e7d32;
+      }
+      .summary-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 8px;
+      }
+      .summary-period {
+        font-size: 14px;
+        color: #555;
+      }
+      .review-form-container {
+        background: #fff;
+        border-radius: 8px;
+        padding: 32px;
+        border: 1px solid #e0e0e0;
+        margin-bottom: 20px;
+      }
+      .form-section {
+        margin-bottom: 40px;
+        padding-bottom: 40px;
+        border-bottom: 2px solid #f5f5f5;
+      }
+      .form-section:last-of-type {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+      .section-heading {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2e7d32;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .form-group {
+        margin-bottom: 24px;
+      }
+      .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 12px;
+      }
+      .required {
+        color: #d32f2f;
+        font-size: 12px;
+        margin-left: 4px;
+      }
+      .star-rating {
+        display: flex;
+        gap: 12px;
+        font-size: 40px;
+        margin-bottom: 12px;
+      }
+      .star {
+        cursor: pointer;
+        color: #ddd;
+        transition: all 0.2s;
+        user-select: none;
+      }
+      .star:hover,
+      .star.active {
+        color: #ffc107;
+        transform: scale(1.1);
+      }
+      .rating-label {
+        font-size: 14px;
+        color: #666;
+        margin-top: 8px;
+      }
+      .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 150px;
+        line-height: 1.6;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: #2e7d32;
+        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+      }
+      .form-hint {
+        font-size: 12px;
+        color: #999;
+        margin-top: 6px;
+      }
+      .char-count {
+        text-align: right;
+        font-size: 12px;
+        color: #999;
+        margin-top: 6px;
+      }
+      .form-actions {
+        display: flex;
+        gap: 16px;
+        margin-top: 32px;
+      }
+      .submit-btn {
+        flex: 1;
+        padding: 16px;
+        background: #2e7d32;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .submit-btn:hover {
+        background: #1b5e20;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(46, 125, 50, 0.2);
+      }
+      .submit-btn:active {
+        transform: translateY(0);
+      }
+      .cancel-btn {
+        padding: 16px 32px;
+        background: #fff;
+        color: #666;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+      .cancel-btn:hover {
+        background: #f5f5f5;
+        border-color: #999;
+      }
+      .note-box {
+        background: #fff3e0;
+        border-left: 4px solid #ff9800;
+        padding: 16px;
+        border-radius: 4px;
+        margin-bottom: 24px;
+      }
+      .note-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #e65100;
+        margin-bottom: 8px;
+      }
+      .note-text {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.6;
+      }
+      footer {
+        background: #fff;
+        border-top: 1px solid #e0e0e0;
+        padding: 40px 0;
+        margin-top: 60px;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .footer-logo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-link {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .footer-link:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+      }
+      .footer-copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #999;
+      }
+      @media (max-width: 768px) {
+        .header-nav {
+          gap: 8px;
+        }
+        .btn {
+          padding: 6px 12px;
+          font-size: 13px;
+        }
+        .page-title {
+          font-size: 22px;
+        }
+        .review-form-container {
+          padding: 20px;
+        }
+        .star-rating {
+          font-size: 32px;
+          gap: 8px;
+        }
+        .form-actions {
+          flex-direction: column-reverse;
+        }
+        .cancel-btn {
+          width: 100%;
+        }
+        .footer-content {
+          flex-direction: column;
+          gap: 16px;
+          text-align: center;
+        }
+        .footer-links {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ヘッダー -->
+    <header>
+      <div class="header-inner">
+        <a href="top.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="#" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main>
+      <div class="section">
+        <div class="container">
+          <a href="rental-history-detail.html" class="back-link">
+            ← 詳細に戻る
+          </a>
+
+          <h1 class="page-title">レビューを投稿する</h1>
+
+          <!-- レビュー対象のサマリー -->
+          <div class="review-summary">
+            <div class="summary-title">世田谷区A邸 駐輪スペース</div>
+            <div class="summary-period">利用期間: 2025/08/01 〜 2025/08/31</div>
+          </div>
+
+          <!-- 注意事項 -->
+          <div class="note-box">
+            <div class="note-title">📝 レビュー投稿について</div>
+            <div class="note-text">
+              ・レビューは一度投稿すると編集できません。<br />
+              ・他の利用者の参考になる、具体的で建設的なレビューをお願いします。<br />
+              ・不適切な内容は運営により削除される場合があります。
+            </div>
+          </div>
+
+          <!-- レビューフォーム -->
+          <form action="#" method="POST" class="review-form-container">
+            <!-- 土地の評価 -->
+            <div class="form-section">
+              <h2 class="section-heading">🏠 土地はいかがでしたか？</h2>
+
+              <div class="form-group">
+                <label class="form-label">
+                  評価<span class="required">*必須</span>
+                </label>
+                <div class="star-rating" id="land-rating">
+                  <span class="star" data-rating="1">★</span>
+                  <span class="star" data-rating="2">★</span>
+                  <span class="star" data-rating="3">★</span>
+                  <span class="star" data-rating="4">★</span>
+                  <span class="star" data-rating="5">★</span>
+                </div>
+                <input
+                  type="hidden"
+                  name="land_rating"
+                  id="land-rating-value"
+                  required
+                />
+                <div class="rating-label" id="land-rating-label">
+                  星をクリックして評価してください
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="land-comment">
+                  コメント（任意）
+                </label>
+                <textarea
+                  id="land-comment"
+                  name="land_comment"
+                  class="form-control"
+                  placeholder="例：駅から近く、屋根付きで雨の日も安心でした。清潔に管理されていて快適に利用できました。"
+                  maxlength="500"
+                ></textarea>
+                <div class="char-count" id="land-char-count">0 / 500</div>
+                <div class="form-hint">
+                  土地の立地、設備、清潔さ、使いやすさなどについてお書きください
+                </div>
+              </div>
+            </div>
+
+            <!-- 貸し手の評価 -->
+            <div class="form-section">
+              <h2 class="section-heading">👤 貸し手（田中 太郎さん）の対応はいかがでしたか？</h2>
+
+              <div class="form-group">
+                <label class="form-label">
+                  評価<span class="required">*必須</span>
+                </label>
+                <div class="star-rating" id="owner-rating">
+                  <span class="star" data-rating="1">★</span>
+                  <span class="star" data-rating="2">★</span>
+                  <span class="star" data-rating="3">★</span>
+                  <span class="star" data-rating="4">★</span>
+                  <span class="star" data-rating="5">★</span>
+                </div>
+                <input
+                  type="hidden"
+                  name="owner_rating"
+                  id="owner-rating-value"
+                  required
+                />
+                <div class="rating-label" id="owner-rating-label">
+                  星をクリックして評価してください
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="owner-comment">
+                  コメント（任意）
+                </label>
+                <textarea
+                  id="owner-comment"
+                  name="owner_comment"
+                  class="form-control"
+                  placeholder="例：丁寧に対応していただきました。メッセージの返信も早く、スムーズに取引できました。"
+                  maxlength="500"
+                ></textarea>
+                <div class="char-count" id="owner-char-count">0 / 500</div>
+                <div class="form-hint">
+                  連絡のやり取り、対応の丁寧さ、信頼性などについてお書きください
+                </div>
+              </div>
+            </div>
+
+            <!-- フォームアクション -->
+            <div class="form-actions">
+              <button type="submit" class="submit-btn">
+                レビューを送信する
+              </button>
+              <a href="rental-history-detail.html" class="cancel-btn">
+                キャンセル
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-logo">スキマパーク</div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">利用規約</a>
+          <a href="#" class="footer-link">プライバシーポリシー</a>
+          <a href="#" class="footer-link">ヘルプ</a>
+          <a href="#" class="footer-link">お問い合わせ</a>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        &copy; 2025 スキマパーク All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+      // 星評価システム
+      function initStarRating(containerId, inputId, labelId) {
+        const container = document.getElementById(containerId);
+        const stars = container.querySelectorAll('.star');
+        const input = document.getElementById(inputId);
+        const label = document.getElementById(labelId);
+        let selectedRating = 0;
+
+        const ratingLabels = {
+          1: '★☆☆☆☆ 不満',
+          2: '★★☆☆☆ やや不満',
+          3: '★★★☆☆ 普通',
+          4: '★★★★☆ 満足',
+          5: '★★★★★ 大変満足',
+        };
+
+        stars.forEach((star) => {
+          star.addEventListener('click', function () {
+            selectedRating = parseInt(this.getAttribute('data-rating'));
+            input.value = selectedRating;
+            updateStars(stars, selectedRating);
+            label.textContent = ratingLabels[selectedRating];
+            label.style.color = '#2e7d32';
+            label.style.fontWeight = '600';
+          });
+
+          star.addEventListener('mouseenter', function () {
+            const hoverRating = parseInt(this.getAttribute('data-rating'));
+            updateStars(stars, hoverRating);
+          });
+        });
+
+        container.addEventListener('mouseleave', function () {
+          updateStars(stars, selectedRating);
+        });
+      }
+
+      function updateStars(stars, rating) {
+        stars.forEach((star, index) => {
+          if (index < rating) {
+            star.classList.add('active');
+          } else {
+            star.classList.remove('active');
+          }
+        });
+      }
+
+      // 土地と貸し手の星評価を初期化
+      initStarRating('land-rating', 'land-rating-value', 'land-rating-label');
+      initStarRating('owner-rating', 'owner-rating-value', 'owner-rating-label');
+
+      // 文字数カウント
+      function initCharCount(textareaId, countId) {
+        const textarea = document.getElementById(textareaId);
+        const counter = document.getElementById(countId);
+
+        textarea.addEventListener('input', function () {
+          counter.textContent = `${this.value.length} / 500`;
+        });
+      }
+
+      initCharCount('land-comment', 'land-char-count');
+      initCharCount('owner-comment', 'owner-char-count');
+
+      // フォーム送信時のバリデーション
+      document.querySelector('form').addEventListener('submit', function (e) {
+        const landRating = document.getElementById('land-rating-value').value;
+        const ownerRating = document.getElementById('owner-rating-value').value;
+
+        if (!landRating || !ownerRating) {
+          e.preventDefault();
+          alert('評価を選択してください。両方の星評価が必須です。');
+          return false;
+        }
+
+        // 実際の送信処理はここに実装
+        // e.preventDefault(); // デモ用
+        // alert('レビューが送信されました！');
+      });
+    </script>
+  </body>
+</html>

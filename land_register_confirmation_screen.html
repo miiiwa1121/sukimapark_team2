@@ -1,0 +1,719 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="スキマパーク土地登録確認ページ" />
+    <title>スキマパーク - 登録内容の確認</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      :root {
+        --primary-color: #2e7d32;
+        --primary-hover: #1b5e20;
+        --error-color: #d32f2f;
+        --border-color: #e0e0e0;
+        --text-primary: #333;
+        --text-secondary: #555;
+        --text-hint: #888;
+        --bg-page: #fafafa;
+        --bg-white: #fff;
+        --bg-secondary: #f5f5f5;
+        --bg-hover: #e0e0e0;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --border-radius: 6px;
+        --transition: all 0.2s;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: var(--text-primary);
+        background: var(--bg-page);
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Header */
+      header {
+        background: var(--bg-white);
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--bg-secondary);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+
+      .icon-btn:hover {
+        background: var(--bg-hover);
+      }
+
+      /* Confirmation section */
+      .confirmation-section {
+        padding: 40px 0;
+      }
+
+      .confirmation-container {
+        background: var(--bg-white);
+        border-radius: 8px;
+        padding: 32px;
+        box-shadow: var(--shadow);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .confirmation-container h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #222;
+      }
+
+      .confirmation-subtitle {
+        color: var(--text-hint);
+        font-size: 14px;
+        margin-bottom: 32px;
+      }
+
+      /* Confirmation item */
+      .confirmation-section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 32px 0 20px 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid var(--primary-color);
+      }
+
+      .confirmation-section-title:first-of-type {
+        margin-top: 0;
+      }
+
+      .confirmation-item {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        gap: 16px;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .confirmation-item:last-child {
+        border-bottom: none;
+      }
+
+      .confirmation-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      .confirmation-value {
+        font-size: 14px;
+        color: var(--text-primary);
+        word-break: break-word;
+      }
+
+      .confirmation-value.description {
+        white-space: pre-wrap;
+        line-height: 1.8;
+      }
+
+      /* Facility tags */
+      .facility-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .facility-tag {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        padding: 4px 12px;
+        border-radius: 16px;
+        font-size: 13px;
+        border: 1px solid var(--border-color);
+      }
+
+      /* Image gallery */
+      .image-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+      }
+
+      .image-item {
+        position: relative;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        background: var(--bg-secondary);
+        aspect-ratio: 4/3;
+      }
+
+      .image-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .image-item img:hover {
+        transform: scale(1.05);
+      }
+
+      .document-preview {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: var(--bg-secondary);
+        border-radius: var(--border-radius);
+        border: 1px solid var(--border-color);
+      }
+
+      .document-icon {
+        font-size: 32px;
+      }
+
+      .document-info {
+        flex: 1;
+      }
+
+      .document-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+      }
+
+      .document-size {
+        font-size: 12px;
+        color: var(--text-hint);
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 12px 24px;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .btn-primary {
+        background: var(--primary-color);
+        color: var(--bg-white);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: var(--primary-hover);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .btn-secondary {
+        background: var(--bg-white);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background: var(--bg-secondary);
+      }
+
+      .button-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 32px;
+        padding-top: 32px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .button-group .btn {
+        flex: 1;
+      }
+
+      /* Success message */
+      .success-message {
+        background: #e8f5e9;
+        color: var(--primary-color);
+        padding: 12px;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        display: none;
+        text-align: center;
+      }
+
+      .success-message.show {
+        display: block;
+      }
+
+      /* Modal for image preview */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.show {
+        display: flex;
+      }
+
+      .modal-content {
+        max-width: 90%;
+        max-height: 90%;
+        position: relative;
+      }
+
+      .modal-content img {
+        max-width: 100%;
+        max-height: 90vh;
+        border-radius: var(--border-radius);
+      }
+
+      .modal-close {
+        position: absolute;
+        top: -40px;
+        right: 0;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 32px;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-close:hover {
+        color: var(--border-color);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .confirmation-container {
+          padding: 24px 16px;
+        }
+
+        .confirmation-container h1 {
+          font-size: 20px;
+        }
+
+        .confirmation-item {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .button-group {
+          flex-direction: column-reverse;
+        }
+
+        .image-gallery {
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
+        .footer-content {
+          flex-direction: column;
+          gap: 16px;
+        }
+      }
+      footer {
+        background: #fff;
+        border-top: 1px solid #e0e0e0;
+        padding: 40px 0;
+        margin-top: 60px;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer-logo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-link {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .footer-link:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+      }
+      .footer-copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="home_screen.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="land_register_form_screen.html" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="confirmation-section">
+        <div class="container">
+          <div class="confirmation-container">
+            <h1>登録内容の確認</h1>
+            <p class="confirmation-subtitle">
+              以下の内容で登録します。内容をご確認ください。
+            </p>
+
+            <div class="success-message" id="successMessage">
+              土地の登録が完了しました！
+            </div>
+
+            <!-- 基本情報 -->
+            <h2 class="confirmation-section-title">基本情報</h2>
+
+            <div class="confirmation-item">
+              <div class="confirmation-label">所在地</div>
+              <div class="confirmation-value" id="confirmLocation">
+                東京都渋谷区渋谷1-2-3
+              </div>
+            </div>
+
+            <div class="confirmation-item">
+              <div class="confirmation-label">面積</div>
+              <div class="confirmation-value" id="confirmArea">50 ㎡</div>
+            </div>
+
+            <div class="confirmation-item">
+              <div class="confirmation-label">設備</div>
+              <div class="confirmation-value">
+                <div class="facility-tags" id="confirmFacilities">
+                  <span class="facility-tag">水道</span>
+                  <span class="facility-tag">電気</span>
+                  <span class="facility-tag">駐車スペース</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="confirmation-item">
+              <div class="confirmation-label">写真</div>
+              <div class="confirmation-value">
+                <div class="image-gallery" id="confirmPhotos">
+                  <div class="image-item">
+                    <img
+                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' fill='%23999'%3E写真1%3C/text%3E%3C/svg%3E"
+                      alt="土地写真1"
+                    />
+                  </div>
+                  <div class="image-item">
+                    <img
+                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' fill='%23999'%3E写真2%3C/text%3E%3C/svg%3E"
+                      alt="土地写真2"
+                    />
+                  </div>
+                  <div class="image-item">
+                    <img
+                      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' fill='%23999'%3E写真3%3C/text%3E%3C/svg%3E"
+                      alt="土地写真3"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="confirmation-item">
+              <div class="confirmation-label">名前</div>
+              <div class="confirmation-value" id="confirmName">
+                駅前スペース
+              </div>
+            </div>
+
+            <div class="confirmation-item">
+              <div class="confirmation-label">土地の権利書</div>
+              <div class="confirmation-value">
+                <div class="document-preview" id="confirmTitleDeed">
+                  <div class="document-icon">📄</div>
+                  <div class="document-info">
+                    <div class="document-name">土地権利証.pdf</div>
+                    <div class="document-size">2.4 MB</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="confirmation-item">
+              <div class="confirmation-label">説明</div>
+              <div
+                class="confirmation-value description"
+                id="confirmDescription"
+              >
+                駅から徒歩3分の好立地にある平坦な土地です。
+                水道・電気設備が整っており、駐車スペースとしての利用に最適です。
+                周辺環境： - コンビニまで徒歩1分 -
+                大通りに面しており、アクセス良好 - 24時間出入り可能
+                利用可能な用途： - 駐車場 - 仮設店舗 - イベントスペース
+                ご不明な点がございましたら、お気軽にお問い合わせください。
+              </div>
+            </div>
+
+            <!-- ボタングループ -->
+            <div class="button-group">
+              <button type="button" class="btn btn-secondary" id="backBtn">
+                修正する
+              </button>
+              <button type="button" class="btn btn-primary" id="submitBtn">
+                登録する
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 画像モーダル -->
+    <div class="modal" id="imageModal">
+      <div class="modal-content">
+        <button class="modal-close" id="modalClose">×</button>
+        <img id="modalImage" src="" alt="拡大表示" />
+      </div>
+    </div>
+
+    <script>
+      // サンプルデータ（実際には前ページから受け取る）
+      const landData = {
+        name: "駅前スペース",
+        location: "東京都渋谷区渋谷1-2-3",
+        area: 50,
+        price: 5000,
+        facilities: ["水道", "電気", "駐車スペース"],
+        description: `駅から徒歩3分の好立地にある平坦な土地です。
+水道・電気設備が整っており、駐車スペースとしての利用に最適です。
+
+周辺環境：
+- コンビニまで徒歩1分
+- 大通りに面しており、アクセス良好
+- 24時間出入り可能
+
+利用可能な用途：
+- 駐車場
+- 仮設店舗
+- イベントスペース
+
+ご不明な点がございましたら、お気軽にお問い合わせください。`,
+        photos: [
+          {
+            name: "写真1.jpg",
+            url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' fill='%23999'%3E写真1%3C/text%3E%3C/svg%3E",
+          },
+          {
+            name: "写真2.jpg",
+            url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' fill='%23999'%3E写真2%3C/text%3E%3C/svg%3E",
+          },
+          {
+            name: "写真3.jpg",
+            url: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23e0e0e0' width='400' height='300'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' fill='%23999'%3E写真3%3C/text%3E%3C/svg%3E",
+          },
+        ],
+        titleDeed: { name: "土地権利証.pdf", size: 2457600 },
+      };
+
+      // データを表示
+      function displayData() {
+        document.getElementById("confirmName").textContent = landData.name;
+        document.getElementById("confirmLocation").textContent =
+          landData.location;
+        document.getElementById(
+          "confirmArea"
+        ).textContent = `${landData.area} ㎡`;
+        document.getElementById(
+          "confirmPrice"
+        ).textContent = `${landData.price.toLocaleString()} 円`;
+        document.getElementById("confirmDescription").textContent =
+          landData.description;
+
+        // 設備
+        const facilitiesContainer =
+          document.getElementById("confirmFacilities");
+        facilitiesContainer.innerHTML = "";
+        landData.facilities.forEach((facility) => {
+          const tag = document.createElement("span");
+          tag.className = "facility-tag";
+          tag.textContent = facility;
+          facilitiesContainer.appendChild(tag);
+        });
+
+        // 写真
+        const photosContainer = document.getElementById("confirmPhotos");
+        photosContainer.innerHTML = "";
+        landData.photos.forEach((photo, index) => {
+          const div = document.createElement("div");
+          div.className = "image-item";
+          const img = document.createElement("img");
+          img.src = photo.url;
+          img.alt = `土地写真${index + 1}`;
+          img.addEventListener("click", () => openModal(photo.url));
+          div.appendChild(img);
+          photosContainer.appendChild(div);
+        });
+
+        // 権利書
+        const titleDeedContainer = document.getElementById("confirmTitleDeed");
+        const sizeInMB = (landData.titleDeed.size / (1024 * 1024)).toFixed(1);
+        titleDeedContainer.innerHTML = `
+        <div class="document-icon">📄</div>
+        <div class="document-info">
+          <div class="document-name">${landData.titleDeed.name}</div>
+          <div class="document-size">${sizeInMB} MB</div>
+        </div>
+      `;
+      }
+
+      // 画像モーダル
+      function openModal(imageUrl) {
+        const modal = document.getElementById("imageModal");
+        const modalImage = document.getElementById("modalImage");
+        modalImage.src = imageUrl;
+        modal.classList.add("show");
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("imageModal");
+        modal.classList.remove("show");
+      }
+
+      document
+        .getElementById("modalClose")
+        .addEventListener("click", closeModal);
+      document
+        .getElementById("imageModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeModal();
+          }
+        });
+
+      // 戻るボタン
+      document.getElementById("backBtn").addEventListener("click", function () {
+        // 実際には前のページに戻る
+        console.log("前のページに戻る");
+        // window.history.back();
+        alert("入力画面に戻ります");
+      });
+
+      // 登録ボタン
+      document
+        .getElementById("submitBtn")
+        .addEventListener("click", function () {
+          const btn = this;
+          btn.disabled = true;
+          btn.textContent = "登録中...";
+
+          // 実際のAPI送信処理
+          setTimeout(() => {
+            document.getElementById("successMessage").classList.add("show");
+            btn.disabled = false;
+            btn.textContent = "登録完了";
+
+            console.log("土地登録完了:", landData);
+
+            // スクロールをトップに
+            window.scrollTo({ top: 0, behavior: "smooth" });
+
+            // 実際には完了画面やマイページにリダイレクト
+            setTimeout(() => {
+              // window.location.href = '/mypage';
+            }, 2000);
+          }, 1500);
+        });
+
+      // ページ読み込み時にデータを表示
+      displayData();
+    </script>
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">スキマパーク</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">利用規約</a>
+            <a href="#" class="footer-link">プライバシーポリシー</a>
+            <a href="#" class="footer-link">ヘルプ</a>
+            <a href="#" class="footer-link">お問い合わせ</a>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

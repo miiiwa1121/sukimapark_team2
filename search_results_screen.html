@@ -1,0 +1,606 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>検索結果 - スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      /* === ページ固有のスタイル === */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+      .icon-btn:hover {
+        background: #e0e0e0;
+      }
+      .form-group {
+        margin-bottom: 16px;
+        text-align: left;
+      }
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: #555;
+      }
+      .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: #2e7d32;
+      }
+      .search-btn {
+        width: 100%;
+        padding: 12px;
+        background: #2e7d32;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 8px;
+      }
+      .search-btn:hover {
+        background: #1b5e20;
+      }
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+        transition: box-shadow 0.2s;
+        position: relative;
+      }
+      .card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .like-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 20px;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+      }
+      .like-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      .like-btn.liked {
+        color: #e91e63;
+      }
+      .card-image {
+        width: 100%;
+        height: 180px;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 14px;
+      }
+      .card-body {
+        padding: 16px;
+      }
+      .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #222;
+      }
+      .card-text {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 12px;
+      }
+      .card-price {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+
+      /* === ここから検索結果ページ専用の追加スタイル === */
+      .results-wrapper {
+        display: flex;
+        gap: 24px;
+        padding-top: 32px;
+        padding-bottom: 40px;
+        align-items: flex-start;
+      }
+
+      /* サイドバー (絞り込み) */
+      .sidebar {
+        width: 300px;
+        flex-shrink: 0;
+        position: sticky; /* サイドバーをスクロール追従 */
+        top: 80px; /* ヘッダーの高さ(60px) + 余白(20px) */
+      }
+      .sidebar-box {
+        background: #fff;
+        border-radius: 8px;
+        padding: 24px;
+        border: 1px solid #e0e0e0;
+      }
+      .sidebar-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #222;
+      }
+
+      /* メインコンテンツ (検索結果) */
+      .results-main {
+        flex-grow: 1;
+        min-width: 0; /* flexアイテムの幅が縮小できるように */
+      }
+
+      /* 検索結果ヘッダー (件数と並び替え) */
+      .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+      }
+      .results-count {
+        font-size: 16px;
+        font-weight: 600;
+      }
+      .results-count span {
+        color: #2e7d32;
+        font-size: 20px;
+      }
+      .sort-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sort-group label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #555;
+      }
+
+      /* 検索結果0件の場合 (ユースケース Alt-1) */
+      .no-results {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 40px;
+        text-align: center;
+        color: #666;
+      }
+      .no-results h3 {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 12px;
+      }
+
+      /* レスポンシブ対応 */
+      @media (max-width: 900px) {
+        .results-wrapper {
+          flex-direction: column;
+        }
+        .sidebar {
+          width: 100%;
+          position: static; /* SPでは追従解除 */
+        }
+        .results-header {
+          flex-direction: column;
+          gap: 16px;
+          align-items: flex-start;
+        }
+        .footer-content {
+          flex-direction: column;
+          gap: 16px;
+        }
+      }
+      footer {
+        background: #fff;
+        border-top: 1px solid #e0e0e0;
+        padding: 40px 0;
+        margin-top: 60px;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer-logo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-link {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .footer-link:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+      }
+      .footer-copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="index.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="#" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container results-wrapper">
+        <aside class="sidebar">
+          <div class="sidebar-box">
+            <h2 class="sidebar-title">条件で絞り込む</h2>
+            <form>
+              <div class="form-group">
+                <label for="keyword">フリーワード検索</label>
+                <input
+                  type="text"
+                  id="keyword"
+                  class="form-control"
+                  placeholder="例: 畑, 駐車場"
+                  value="イベントスペース"
+                />
+                </div>
+
+              <div class="form-group">
+                <label>あいまい検索</label>
+                <div style="display: flex; gap: 16px">
+                  <label
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 6px;
+                      cursor: pointer;
+                    "
+                  >
+                    <input
+                      type="radio"
+                      name="fuzzy_search"
+                      value="on"
+                      checked
+                    />
+                    <span>オン</span>
+                  </label>
+                  <label
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 6px;
+                      cursor: pointer;
+                    "
+                  >
+                    <input type="radio" name="fuzzy_search" value="off" />
+                    <span>オフ</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 利用日 -->
+              <div class="form-group">
+                <label for="usage_date">利用日</label>
+                <input
+                  type="date"
+                  id="usage_date"
+                  class="form-control"
+                  placeholder="利用日を選択"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="prefecture">都道府県</label>
+                <select id="prefecture" class="form-control">
+                  <option value="">すべての都道府県</option>
+                  <option>北海道</option>
+                  <option>青森県</option>
+                  <option>岩手県</option>
+                  <option>宮城県</option>
+                  <option>秋田県</option>
+                  <option>山形県</option>
+                  <option>福島県</option>
+                  <option>茨城県</option>
+                  <option>栃木県</option>
+                  <option>群馬県</option>
+                  <option>埼玉県</option>
+                  <option>千葉県</option>
+                  <option>東京都</option>
+                  <option>神奈川県</option>
+                  <option>新潟県</option>
+                  <option>富山県</option>
+                  <option>石川県</option>
+                  <option>福井県</option>
+                  <option>山梨県</option>
+                  <option>長野県</option>
+                  <option>岐阜県</option>
+                  <option>静岡県</option>
+                  <option>愛知県</option>
+                  <option>三重県</option>
+                  <option>滋賀県</option>
+                  <option>京都府</option>
+                  <option>大阪府</option>
+                  <option>兵庫県</option>
+                  <option>奈良県</option>
+                  <option>和歌山県</option>
+                  <option>鳥取県</option>
+                  <option>島根県</option>
+                  <option>岡山県</option>
+                  <option>広島県</option>
+                  <option>山口県</option>
+                  <option>徳島県</option>
+                  <option>香川県</option>
+                  <option>愛媛県</option>
+                  <option>高知県</option>
+                  <option>福岡県</option>
+                  <option>佐賀県</option>
+                  <option>長崎県</option>
+                  <option>熊本県</option>
+                  <option>大分県</option>
+                  <option>宮崎県</option>
+                  <option>鹿児島県</option>
+                  <option>沖縄県</option>
+                  </select>
+              </div>
+
+              <div class="form-group">
+                <label for="city">市区町村</label>
+                <input
+                  type="text"
+                  id="city"
+                  class="form-control"
+                  placeholder="例: 渋谷区"
+                  value="渋谷区"
+                />
+              </div>
+
+              <div class="form-group">
+                <label>利用時間帯</label>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 12px;
+                  "
+                >
+                  <input
+                    type="time"
+                    id="time_start"
+                    class="form-control"
+                    step="1800"
+                    value="09:00"
+                  />
+                  <input
+                    type="time"
+                    id="time_end"
+                    class="form-control"
+                    step="1800"
+                    value="17:00"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="price_max">料金（上限）</label>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <input
+                    type="number"
+                    id="price_max"
+                    class="form-control"
+                    placeholder="例: 50000"
+                    min="0"
+                    step="1000"
+                    value="50000"
+                  />
+                  <span style="white-space: nowrap; color: #666">円まで</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="area">面積</label>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <input
+                    type="number"
+                    id="area"
+                    class="form-control"
+                    placeholder="例: 100"
+                    min="0"
+                    step="1"
+                    value="100"
+                  />
+                  <span style="white-space: nowrap; color: #666">㎡以上</span>
+                </div>
+              </div>
+
+              <button type="submit" class="search-btn">再検索する</button>
+            </form>
+          </div>
+        </aside>
+
+        <section class="results-main">
+          <div class="results-header">
+            <div class="results-count">
+              「渋谷区」の検索結果: <span>3</span>件
+            </div>
+            
+            <div class="sort-group">
+              <label for="sort_order">並び替え:</label>
+              <select id="sort_order" class="form-control" style="width: auto">
+                <option value="recommend">おすすめ順</option>
+                <option value="rating_desc">評価（高い順）</option>
+                <option value="rating_asc">評価（低い順）</option>
+                <option value="distance">指定位置からの距離</option>
+                <option value="price_asc">料金（安い順）</option>
+                <option value="price_desc">料金（高い順）</option>
+                <option value="area_desc">面積（広い順）</option>
+                <option value="area_asc">面積（狭い順）</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="card-grid">
+            <div class="card">
+              <button class="like-btn" onclick="this.classList.toggle('liked'); event.stopPropagation();">♡</button>
+              <div class="card-image">土地の写真</div>
+              <div class="card-body">
+                <h3 class="card-title">渋谷駅近 イベントスペースA</h3>
+                <p class="card-text">東京都渋谷区</p>
+                <div class="card-price">日額 45,000円</div>
+              </div>
+            </div>
+            <div class="card">
+              <button class="like-btn" onclick="this.classList.toggle('liked'); event.stopPropagation();">♡</button>
+              <div class="card-image">土地の写真</div>
+              <div class="card-body">
+                <h3 class="card-title">代々木公園近くの広場</h3>
+                <p class="card-text">東京都渋谷区</p>
+                <div class="card-price">時間 5,000円</div>
+              </div>
+            </div>
+            <div class="card">
+              <button class="like-btn" onclick="this.classList.toggle('liked'); event.stopPropagation();">♡</button>
+              <div class="card-image">土地の写真</div>
+              <div class="card-body">
+                <h3 class="card-title">撮影用スペース（恵比寿）</h3>
+                <p class="card-text">東京都渋谷区</p>
+                <div class="card-price">日額 38,000円</div>
+              </div>
+            </div>
+          </div>
+
+          </section>
+      </div>
+    </main>
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">スキマパーク</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">利用規約</a>
+            <a href="#" class="footer-link">プライバシーポリシー</a>
+            <a href="#" class="footer-link">ヘルプ</a>
+            <a href="#" class="footer-link">お問い合わせ</a>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

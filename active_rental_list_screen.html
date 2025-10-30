@@ -1,0 +1,425 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>レンタル中の土地 - スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+      .icon-btn:hover {
+        background: #e0e0e0;
+      }
+      .page-header {
+        padding: 40px 0 20px;
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 8px;
+      }
+      .page-subtitle {
+        font-size: 14px;
+        color: #666;
+      }
+      .section {
+        padding: 40px 0;
+      }
+      .rental-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .rental-card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+        transition: box-shadow 0.2s;
+        display: flex;
+        flex-direction: row;
+      }
+      .rental-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .rental-card-image {
+        width: 240px;
+        height: 180px;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .rental-card-body {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .rental-card-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #222;
+      }
+      .rental-card-info {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+        flex: 1;
+      }
+      .info-row {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #666;
+      }
+      .info-label {
+        font-weight: 500;
+        color: #555;
+        min-width: 100px;
+      }
+      .info-value {
+        color: #333;
+      }
+      .rental-period {
+        color: #2e7d32;
+        font-weight: 500;
+      }
+      .rental-price {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        margin-bottom: 12px;
+      }
+      .rental-card-footer {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+      }
+      .empty-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+        opacity: 0.5;
+      }
+      .empty-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 12px;
+      }
+      .empty-text {
+        font-size: 14px;
+        color: #999;
+        margin-bottom: 24px;
+      }
+      footer {
+        background: #fff;
+        border-top: 1px solid #e0e0e0;
+        padding: 40px 0;
+        margin-top: 60px;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer-logo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-link {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .footer-link:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+      }
+      .footer-copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #999;
+      }
+      @media (max-width: 768px) {
+        .header-nav {
+          gap: 8px;
+        }
+        .btn {
+          padding: 6px 12px;
+          font-size: 13px;
+        }
+        .page-title {
+          font-size: 22px;
+        }
+        .rental-card {
+          flex-direction: column;
+        }
+        .rental-card-image {
+          width: 100%;
+          height: 200px;
+        }
+        .footer-content {
+          flex-direction: column;
+          gap: 16px;
+          text-align: center;
+        }
+        .footer-links {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ヘッダー -->
+    <header>
+      <div class="container header-inner">
+        <a href="home_screen.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="#" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ページヘッダー -->
+    <div class="page-header">
+      <div class="container">
+        <h1 class="page-title">レンタル中の土地</h1>
+        <p class="page-subtitle">現在借りている土地の一覧です</p>
+      </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+      <div class="section">
+        <div class="container">
+          <!-- レンタル中の土地リスト -->
+          <div class="rental-list">
+            <!-- カード1 -->
+            <div class="rental-card">
+              <div class="rental-card-image">土地の写真</div>
+              <div class="rental-card-body">
+                <h3 class="rental-card-title">世田谷区A邸 駐輪スペース</h3>
+                <div class="rental-card-info">
+                  <div class="info-row">
+                    <span class="info-label">貸し手:</span>
+                    <span class="info-value">田中 太郎</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">レンタル期間:</span>
+                    <span class="info-value rental-period"
+                      >2025/10/01 〜 2025/10/31</span
+                    >
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">所在地:</span>
+                    <span class="info-value">東京都世田谷区</span>
+                  </div>
+                </div>
+                <div class="rental-price">合計金額: 25,000円</div>
+                <div class="rental-card-footer">
+                  <a href="rental-detail-active.html" class="btn btn-primary"
+                    >詳細を見る</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- カード2 -->
+            <div class="rental-card">
+              <div class="rental-card-image">土地の写真</div>
+              <div class="rental-card-body">
+                <h3 class="rental-card-title">品川区マンション 駐車スペース</h3>
+                <div class="rental-card-info">
+                  <div class="info-row">
+                    <span class="info-label">貸し手:</span>
+                    <span class="info-value">佐藤 花子</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">レンタル期間:</span>
+                    <span class="info-value rental-period"
+                      >2025/10/15 〜 2025/11/14</span
+                    >
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">所在地:</span>
+                    <span class="info-value">東京都品川区</span>
+                  </div>
+                </div>
+                <div class="rental-price">合計金額: 45,000円</div>
+                <div class="rental-card-footer">
+                  <a href="rental-detail-active.html" class="btn btn-primary"
+                    >詳細を見る</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- カード3 -->
+            <div class="rental-card">
+              <div class="rental-card-image">土地の写真</div>
+              <div class="rental-card-body">
+                <h3 class="rental-card-title">成田市 家庭菜園スペース</h3>
+                <div class="rental-card-info">
+                  <div class="info-row">
+                    <span class="info-label">貸し手:</span>
+                    <span class="info-value">鈴木 一郎</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">レンタル期間:</span>
+                    <span class="info-value rental-period"
+                      >2025/09/01 〜 2025/12/31</span
+                    >
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">所在地:</span>
+                    <span class="info-value">千葉県成田市</span>
+                  </div>
+                </div>
+                <div class="rental-price">合計金額: 60,000円</div>
+                <div class="rental-card-footer">
+                  <a href="rental-detail-active.html" class="btn btn-primary"
+                    >詳細を見る</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- レンタル中の土地がない場合の表示（コメントアウト） -->
+          <!--
+          <div class="empty-state">
+            <div class="empty-icon">📦</div>
+            <h2 class="empty-title">現在レンタル中の土地はありません</h2>
+            <p class="empty-text">
+              気になる土地を見つけて、レンタルを開始しましょう
+            </p>
+            <a href="top.html" class="btn btn-primary">土地を探す</a>
+          </div>
+          -->
+        </div>
+      </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">スキマパーク</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">利用規約</a>
+            <a href="#" class="footer-link">プライバシーポリシー</a>
+            <a href="#" class="footer-link">ヘルプ</a>
+            <a href="#" class="footer-link">お問い合わせ</a>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

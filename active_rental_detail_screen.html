@@ -1,0 +1,625 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>世田谷区A邸 駐輪スペース - スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .container-wide {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        text-align: center;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .btn-outline {
+        background: #fff;
+        color: #2e7d32;
+        border: 1px solid #2e7d32;
+      }
+      .btn-outline:hover {
+        background: #f1f8e9;
+      }
+      .btn-large {
+        padding: 12px 24px;
+        font-size: 16px;
+        width: 100%;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+      .icon-btn:hover {
+        background: #e0e0e0;
+      }
+      .breadcrumb {
+        padding: 20px 0;
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .breadcrumb-list {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        flex-wrap: wrap;
+      }
+      .breadcrumb-item {
+        color: #666;
+        text-decoration: none;
+      }
+      .breadcrumb-item:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+      }
+      .breadcrumb-separator {
+        color: #999;
+      }
+      .breadcrumb-current {
+        color: #333;
+        font-weight: 500;
+      }
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #2e7d32;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 20px;
+      }
+      .back-link:hover {
+        text-decoration: underline;
+      }
+      .section {
+        padding: 40px 0;
+      }
+      .detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 40px;
+        margin-top: 20px;
+      }
+      .detail-main {
+        flex: 1;
+      }
+      .detail-sidebar {
+        position: sticky;
+        top: 80px;
+        height: fit-content;
+      }
+      .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 20px;
+      }
+      .gallery {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+        margin-bottom: 30px;
+      }
+      .gallery-main {
+        width: 100%;
+        height: 400px;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 16px;
+      }
+      .gallery-thumbs {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        padding: 12px;
+        background: #f5f5f5;
+      }
+      .gallery-thumb {
+        height: 80px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 12px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.2s;
+      }
+      .gallery-thumb:hover {
+        border-color: #2e7d32;
+      }
+      .info-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 24px;
+        border: 1px solid #e0e0e0;
+        margin-bottom: 20px;
+      }
+      .info-card-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .info-row {
+        display: flex;
+        padding: 12px 0;
+        border-bottom: 1px solid #f5f5f5;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-label {
+        font-weight: 500;
+        color: #555;
+        min-width: 120px;
+        font-size: 14px;
+      }
+      .info-value {
+        color: #333;
+        font-size: 14px;
+        flex: 1;
+      }
+      .rental-period-value {
+        color: #2e7d32;
+        font-weight: 600;
+      }
+      .description-text {
+        color: #555;
+        font-size: 14px;
+        line-height: 1.8;
+        white-space: pre-wrap;
+      }
+      .map-container {
+        width: 100%;
+        height: 300px;
+        background: #e0e0e0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 16px;
+        margin-top: 16px;
+      }
+      .payment-summary {
+        background: #f1f8e9;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+      .payment-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 14px;
+      }
+      .payment-row:last-child {
+        margin-bottom: 0;
+        padding-top: 12px;
+        border-top: 2px solid #c5e1a5;
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+      .payment-label {
+        color: #555;
+      }
+      .payment-value {
+        color: #333;
+        font-weight: 500;
+      }
+      .owner-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        margin-bottom: 20px;
+      }
+      .owner-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .owner-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+      .owner-info {
+        flex: 1;
+      }
+      .owner-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 4px;
+      }
+      .owner-label {
+        font-size: 12px;
+        color: #666;
+      }
+      .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        background: #e8f5e9;
+        color: #2e7d32;
+        margin-bottom: 16px;
+      }
+      footer {
+        background: #fff;
+        border-top: 1px solid #e0e0e0;
+        padding: 40px 0;
+        margin-top: 60px;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer-logo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-link {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .footer-link:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+      }
+      .footer-copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #999;
+      }
+      @media (max-width: 768px) {
+        .header-nav {
+          gap: 8px;
+        }
+        .btn {
+          padding: 6px 12px;
+          font-size: 13px;
+        }
+        .page-title {
+          font-size: 22px;
+        }
+        .detail-layout {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        .detail-sidebar {
+          position: static;
+        }
+        .gallery-main {
+          height: 250px;
+        }
+        .gallery-thumbs {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .footer-content {
+          flex-direction: column;
+          gap: 16px;
+          text-align: center;
+        }
+        .footer-links {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ヘッダー -->
+    <header>
+      <div class="container header-inner">
+        <a href="top.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="#" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- パンくずリスト -->
+    <div class="breadcrumb">
+      <div class="container">
+        <nav class="breadcrumb-list">
+          <a href="top.html" class="breadcrumb-item">トップ</a>
+          <span class="breadcrumb-separator">›</span>
+          <a href="rentals-active.html" class="breadcrumb-item"
+            >レンタル中一覧</a
+          >
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-current">世田谷区A邸 駐輪スペース</span>
+        </nav>
+      </div>
+    </div>
+
+    <!-- メインコンテンツ -->
+    <main>
+      <div class="section">
+        <div class="container-wide">
+          <a href="rentals-active.html" class="back-link">
+            ← 一覧に戻る
+          </a>
+
+          <div class="status-badge">レンタル中</div>
+
+          <h1 class="page-title">世田谷区A邸 駐輪スペース</h1>
+
+          <div class="detail-layout">
+            <!-- 左側：詳細情報 -->
+            <div class="detail-main">
+              <!-- 写真ギャラリー -->
+              <div class="gallery">
+                <div class="gallery-main">メイン写真</div>
+                <div class="gallery-thumbs">
+                  <div class="gallery-thumb">写真1</div>
+                  <div class="gallery-thumb">写真2</div>
+                  <div class="gallery-thumb">写真3</div>
+                  <div class="gallery-thumb">写真4</div>
+                </div>
+              </div>
+
+              <!-- 土地情報 -->
+              <div class="info-card">
+                <h2 class="info-card-title">土地情報</h2>
+                <div class="info-row">
+                  <span class="info-label">所在地</span>
+                  <span class="info-value"
+                    >東京都世田谷区桜新町1-2-3</span
+                  >
+                </div>
+                <div class="info-row">
+                  <span class="info-label">面積</span>
+                  <span class="info-value">5㎡</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">用途</span>
+                  <span class="info-value">駐輪スペース</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">利用可能時間</span>
+                  <span class="info-value">24時間利用可能</span>
+                </div>
+
+                <!-- 地図 -->
+                <div class="map-container">[Google Map埋め込みエリア]</div>
+              </div>
+
+              <!-- 詳細説明 -->
+              <div class="info-card">
+                <h2 class="info-card-title">詳細説明</h2>
+                <div class="description-text">
+駅から徒歩5分の好立地にある、屋根付きの駐輪スペースです。
+雨の日でも安心してご利用いただけます。
+
+【利用可能な設備】
+・屋根あり
+・照明あり
+・防犯カメラ設置済み
+
+【ご利用にあたっての注意事項】
+・自転車は1台まで
+・バイクの駐車は不可
+・夜間の騒音にご配慮ください
+・鍵は各自でご用意ください
+                </div>
+              </div>
+
+              <!-- 利用ルール -->
+              <div class="info-card">
+                <h2 class="info-card-title">利用ルール</h2>
+                <div class="description-text">
+1. 貸し出しスペースは写真の範囲内のみです
+2. 他の利用者の迷惑にならないようご配慮ください
+3. ゴミは各自お持ち帰りください
+4. 火気の使用は厳禁です
+5. 騒音にご注意ください
+                </div>
+              </div>
+            </div>
+
+            <!-- 右側：サイドバー -->
+            <div class="detail-sidebar">
+              <!-- 支払い情報 -->
+              <div class="payment-summary">
+                <div class="payment-row">
+                  <span class="payment-label">利用開始</span>
+                  <span class="payment-value">2025/10/01</span>
+                </div>
+                <div class="payment-row">
+                  <span class="payment-label">利用終了</span>
+                  <span class="payment-value">2025/10/31</span>
+                </div>
+                <div class="payment-row">
+                  <span class="payment-label">単価</span>
+                  <span class="payment-value">¥25,000 / 月</span>
+                </div>
+                <div class="payment-row">
+                  <span class="payment-label">合計金額</span>
+                  <span class="payment-value">¥25,000</span>
+                </div>
+              </div>
+
+              <!-- 貸し手情報 -->
+              <div class="owner-card">
+                <h3
+                  style="
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #666;
+                    margin-bottom: 12px;
+                  "
+                >
+                  貸し手情報
+                </h3>
+                <div class="owner-header">
+                  <div class="owner-avatar">👤</div>
+                  <div class="owner-info">
+                    <div class="owner-name">田中 太郎</div>
+                    <div class="owner-label">オーナー</div>
+                  </div>
+                </div>
+                <div class="action-buttons">
+                  <button class="btn btn-primary btn-large">
+                    💬 貸し手に連絡する
+                  </button>
+                </div>
+              </div>
+
+              <!-- その他のアクション -->
+              <div class="info-card">
+                <h3
+                  style="
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #666;
+                    margin-bottom: 12px;
+                  "
+                >
+                  サポート
+                </h3>
+                <div class="action-buttons">
+                  <button class="btn btn-outline btn-large">
+                    ⚠️ 運営に問い合わせる
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- フッター -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">スキマパーク</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">利用規約</a>
+            <a href="#" class="footer-link">プライバシーポリシー</a>
+            <a href="#" class="footer-link">ヘルプ</a>
+            <a href="#" class="footer-link">お問い合わせ</a>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

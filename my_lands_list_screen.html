@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自己保持土地一覧 | スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .status {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .status.published {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+      .status.private {
+        background: #ffebee;
+        color: #c62828;
+      }
+      main {
+        padding: 40px 0 60px;
+      }
+      .page-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+      .page-header h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #222;
+      }
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .filter-chip {
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: #f1f8e9;
+        border: 1px solid #c5e1a5;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .filter-chip.active,
+      .filter-chip:hover {
+        background: #c5e1a5;
+        color: #1b5e20;
+      }
+      .land-list {
+        display: grid;
+        gap: 20px;
+      }
+      .land-card {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 20px;
+      }
+      .land-thumb {
+        width: 160px;
+        height: 120px;
+        background: #e0e0e0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 13px;
+      }
+      .land-body {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .land-body h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #222;
+      }
+      .land-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        color: #666;
+        font-size: 13px;
+      }
+      .land-desc {
+        color: #555;
+        font-size: 14px;
+      }
+      .land-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: #2e7d32;
+        background: #e8f5e9;
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
+      @media (max-width: 768px) {
+        .land-card {
+          grid-template-columns: 1fr;
+        }
+        .land-thumb {
+          width: 100%;
+        }
+        .land-actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="home_screen.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="land-register.html" class="btn btn-primary">土地を登録</a>
+          <a href="user-self.html" class="btn btn-secondary">ユーザ画面へ</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="container">
+        <div class="page-header">
+          <div>
+            <h1>自己保持土地一覧</h1>
+            <p style="color: #555; margin-top: 8px">
+              公開・非公開のすべての土地が確認できます。ステータスに応じて
+              貸出条件の編集や貸出状況の確認を行ってください。
+            </p>
+          </div>
+          <div class="filters">
+            <span class="filter-chip active">すべて</span>
+            <span class="filter-chip">公開中</span>
+            <span class="filter-chip">非公開</span>
+          </div>
+        </div>
+
+        <div class="land-list">
+          <div class="land-card">
+            <div class="land-thumb">プレビュー</div>
+            <div class="land-body">
+              <div style="display: flex; align-items: center; gap: 10px">
+                <h2>都市型ポップアップスペース</h2>
+                <span class="status published">公開中</span>
+                <span class="badge">貸出中: 2025/10/01-2025/10/31</span>
+              </div>
+              <div class="land-meta">
+                <span>東京都・中央区</span>
+                <span>面積: 80㎡</span>
+                <span>設備: 電源・水道・Wi-Fi</span>
+                <span>更新日: 2025/10/20</span>
+              </div>
+              <p class="land-desc">
+                ビル屋上のフラットスペース。イベントや期間限定ショップ向けとして
+                利用されています。
+              </p>
+              <div class="land-actions">
+                <a href="land-rental-active.html" class="btn btn-primary">貸出中詳細へ</a>
+                <a href="land-detail.html" class="btn btn-secondary">土地詳細を確認</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="land-card">
+            <div class="land-thumb">プレビュー</div>
+            <div class="land-body">
+              <div style="display: flex; align-items: center; gap: 10px">
+                <h2>里山キャンプベース</h2>
+                <span class="status private">非公開</span>
+                <span class="badge" style="background: #fff8e1; color: #ff8f00">
+                  公開準備中
+                </span>
+              </div>
+              <div class="land-meta">
+                <span>長野県・茅野市</span>
+                <span>面積: 450㎡</span>
+                <span>設備: 電源・簡易トイレ</span>
+                <span>更新日: 2025/09/15</span>
+              </div>
+              <p class="land-desc">
+                標高1,000mの涼しいキャンプ用地。今シーズンの貸出条件を調整中です。
+              </p>
+              <div class="land-actions">
+                <a href="land_register_form_screen.html" class="btn btn-primary">貸出条件を設定</a>
+                <a href="land-detail.html" class="btn btn-secondary">土地詳細を確認</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="land-card">
+            <div class="land-thumb">プレビュー</div>
+            <div class="land-body">
+              <div style="display: flex; align-items: center; gap: 10px">
+                <h2>街角コミュニティガーデン</h2>
+                <span class="status published">公開中</span>
+              </div>
+              <div class="land-meta">
+                <span>埼玉県・川口市</span>
+                <span>面積: 50㎡</span>
+                <span>設備: 水道・倉庫</span>
+                <span>更新日: 2025/08/30</span>
+              </div>
+              <p class="land-desc">
+                地域向けに週末菜園として利用されています。利用者が決まっていない
+                期間のみ募集しています。
+              </p>
+              <div class="land-actions">
+                <a href="land-rental-active.html" class="btn btn-secondary">貸出状況の確認</a>
+                <a href="land_register_form_screen.html" class="btn btn-primary">公開設定を変更</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+      <footer>
+      <div class=\"container\">
+        <div class=\"footer-content\">
+          <div class=\"footer-logo\">スキマパーク</div>
+          <div class=\"footer-links\">
+            <a href=\"#\" class=\"footer-link\">利用規約</a>
+            <a href=\"#\" class=\"footer-link\">プライバシーポリシー</a>
+            <a href=\"#\" class=\"footer-link\">ヘルプ</a>
+            <a href=\"#\" class=\"footer-link\">お問い合わせ</a>
+          </div>
+        </div>
+        <div class=\"footer-copyright\">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,999 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="スキマパーク土地登録ページ" />
+    <title>スキマパーク - 土地登録</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      :root {
+        --primary-color: #2e7d32;
+        --primary-hover: #1b5e20;
+        --error-color: #d32f2f;
+        --border-color: #e0e0e0;
+        --text-primary: #333;
+        --text-secondary: #555;
+        --text-hint: #888;
+        --bg-page: #fafafa;
+        --bg-white: #fff;
+        --bg-secondary: #f5f5f5;
+        --bg-hover: #e0e0e0;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --border-radius: 6px;
+        --transition: all 0.2s;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: var(--text-primary);
+        background: var(--bg-page);
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Header */
+      header {
+        background: var(--bg-white);
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 8px 16px;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .btn-primary {
+        background: var(--primary-color);
+        color: var(--bg-white);
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-hover);
+      }
+
+      .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+
+      .btn-secondary:hover {
+        background: var(--bg-hover);
+      }
+
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--bg-secondary);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+
+      .icon-btn:hover {
+        background: var(--bg-hover);
+      }
+
+      /* Form */
+      .registration-section {
+        padding: 40px 0;
+      }
+
+      .form-container {
+        background: var(--bg-white);
+        border-radius: 8px;
+        padding: 32px;
+        box-shadow: var(--shadow);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .form-container h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #222;
+      }
+
+      .form-subtitle {
+        color: var(--text-hint);
+        font-size: 14px;
+        margin-bottom: 32px;
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: var(--text-secondary);
+      }
+
+      .required {
+        color: var(--error-color);
+        font-size: 12px;
+        margin-left: 4px;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.2s;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+      }
+
+      .form-control.error {
+        border-color: var(--error-color);
+      }
+
+      .form-control[type="file"] {
+        padding: 8px 12px;
+      }
+
+      textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .form-control-hint {
+        font-size: 12px;
+        color: var(--text-hint);
+        margin-top: 4px;
+      }
+
+      .error-message {
+        font-size: 12px;
+        color: var(--error-color);
+        margin-top: 4px;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      /* Input group for units */
+      .input-group {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .input-group .form-control {
+        flex: 1;
+      }
+
+      .input-group-text {
+        color: var(--text-secondary);
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      /* Checkbox group */
+      .checkbox-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+        margin-top: 8px;
+      }
+
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: normal;
+      }
+
+      .checkbox-label input[type="checkbox"] {
+        cursor: pointer;
+        accent-color: var(--primary-color);
+      }
+
+      /* File upload preview */
+      .file-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .file-preview-item {
+        position: relative;
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 8px;
+        text-align: center;
+        background: var(--bg-secondary);
+      }
+
+      .file-preview-item img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-bottom: 4px;
+      }
+
+      .file-preview-item .file-name {
+        font-size: 11px;
+        color: var(--text-secondary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .file-preview-item .remove-btn {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: var(--error-color);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .file-preview-item .remove-btn:hover {
+        background: #b71c1c;
+      }
+
+      /* Submit button */
+      .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary-color);
+        color: var(--bg-white);
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 16px;
+        transition: var(--transition);
+      }
+
+      .submit-btn:hover:not(:disabled) {
+        background: var(--primary-hover);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      /* Success message */
+      .success-message {
+        background: #e8f5e9;
+        color: var(--primary-color);
+        padding: 12px;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        display: none;
+        text-align: center;
+      }
+
+      .success-message.show {
+        display: block;
+      }
+
+      /* Section divider */
+      .form-section {
+        margin-top: 32px;
+        padding-top: 32px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .form-section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 20px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header-nav {
+          gap: 8px;
+        }
+
+        .btn {
+          padding: 6px 12px;
+          font-size: 13px;
+        }
+
+        .form-container {
+          padding: 24px 16px;
+        }
+
+        .form-container h1 {
+          font-size: 20px;
+        }
+
+        .checkbox-group {
+          grid-template-columns: 1fr;
+        }
+
+        .file-preview {
+          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        }
+        .footer-content {
+          flex-direction: column;
+          gap: 16px;
+        }
+      }
+      footer {
+        background: #fff;
+        border-top: 1px solid #e0e0e0;
+        padding: 40px 0;
+        margin-top: 60px;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer-logo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-link {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .footer-link:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+      }
+      .footer-copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="home_screen.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="land_register_form_screen.html" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="registration-section">
+        <div class="container">
+          <div class="form-container">
+            <h1>土地を登録</h1>
+            <p class="form-subtitle">あなたの土地情報を入力してください</p>
+
+            <form id="landRegistrationForm" novalidate>
+              <!-- 基本情報 -->
+              <div class="form-section">
+                <h2 class="form-section-title">基本情報</h2>
+
+                <!-- 所在地 -->
+                <div class="form-group">
+                  <label for="location"
+                    >所在地<span class="required">必須</span></label
+                  >
+                  <input
+                    type="text"
+                    id="location"
+                    class="form-control"
+                    placeholder="例: 東京都渋谷区渋谷1-2-3"
+                    required
+                  />
+                  <p class="form-control-hint">正確な住所を入力してください</p>
+                  <p class="error-message" id="locationError"></p>
+                </div>
+
+                <!-- 面積 -->
+                <div class="form-group">
+                  <label for="area"
+                    >面積<span class="required">必須</span></label
+                  >
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      id="area"
+                      class="form-control"
+                      placeholder="例: 50"
+                      required
+                      min="1"
+                      step="0.1"
+                    />
+                    <span class="input-group-text">㎡</span>
+                  </div>
+                  <p class="error-message" id="areaError"></p>
+                </div>
+
+                <!-- 設備 -->
+                <div class="form-group">
+                  <label>設備<span class="required">必須</span></label>
+                  <div class="checkbox-group">
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="facilities" value="water" />
+                      <span>水道</span>
+                    </label>
+                    <label class="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="facilities"
+                        value="electricity"
+                      />
+                      <span>電気</span>
+                    </label>
+                    <label class="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="facilities"
+                        value="parking"
+                      />
+                      <span>駐車スペース</span>
+                    </label>
+                    <label class="checkbox-label">
+                      <input
+                        type="checkbox"
+                        name="facilities"
+                        value="storage"
+                      />
+                      <span>倉庫</span>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="facilities" value="toilet" />
+                      <span>トイレ</span>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="facilities" value="fence" />
+                      <span>フェンス</span>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="facilities" value="roof" />
+                      <span>屋根</span>
+                    </label>
+                    <label class="checkbox-label">
+                      <input type="checkbox" name="facilities" value="none" />
+                      <span>なし</span>
+                    </label>
+                  </div>
+                  <div style="margin-top: 12px">
+                    <label class="checkbox-label">
+                      <input
+                        type="checkbox"
+                        id="facilitiesOtherCheck"
+                        name="facilities"
+                        value="other"
+                      />
+                      <span>その他</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="facilitiesOther"
+                      class="form-control"
+                      placeholder="その他の設備を入力してください"
+                      style="margin-top: 8px; display: none"
+                      maxlength="100"
+                    />
+                  </div>
+                  <p class="form-control-hint">
+                    利用可能な設備をすべて選択してください
+                  </p>
+                  <p class="error-message" id="facilitiesError"></p>
+                </div>
+
+                <!-- 写真 -->
+                <div class="form-group">
+                  <label for="photos"
+                    >写真<span class="required">必須</span></label
+                  >
+                  <input
+                    type="file"
+                    id="photos"
+                    class="form-control"
+                    required
+                    accept="image/*"
+                    multiple
+                  />
+                  <p class="form-control-hint">
+                    土地の様子が分かる写真を複数枚アップロードしてください（最大10枚、各5MB以下）
+                  </p>
+                  <p class="error-message" id="photosError"></p>
+                  <div class="file-preview" id="photosPreview"></div>
+                </div>
+
+                <!-- 名前 -->
+                <div class="form-group">
+                  <label for="name"
+                    >名前<span class="required">必須</span></label
+                  >
+                  <input
+                    type="text"
+                    id="name"
+                    class="form-control"
+                    placeholder="例: 駅前スペース"
+                    required
+                    maxlength="50"
+                  />
+                  <p class="form-control-hint">
+                    借り手に分かりやすい名前を付けてください（最大50文字）
+                  </p>
+                  <p class="error-message" id="nameError"></p>
+                </div>
+
+                <!-- 土地の権利書 -->
+                <div class="form-group">
+                  <label for="titleDeed"
+                    >土地の権利書<span class="required">必須</span></label
+                  >
+                  <input
+                    type="file"
+                    id="titleDeed"
+                    class="form-control"
+                    required
+                    accept="image/*,.pdf"
+                  />
+                  <p class="form-control-hint">
+                    登記簿謄本、権利証などの書類をアップロードしてください（最大10MB）
+                  </p>
+                  <p class="error-message" id="titleDeedError"></p>
+                  <div class="file-preview" id="titleDeedPreview"></div>
+                </div>
+
+                <!-- 説明 -->
+                <div class="form-group">
+                  <label for="description"
+                    >説明<span style="color: #999; font-weight: normal;">（任意）</span></label
+                  >
+                  <textarea
+                    id="description"
+                    class="form-control"
+                    placeholder="土地の特徴、利用可能な用途、注意事項などを詳しく記載してください"
+                    maxlength="1000"
+                  ></textarea>
+                  <p class="form-control-hint">
+                    詳細な説明は借り手の判断材料になります（最大1000文字）
+                  </p>
+                  <p class="error-message" id="descriptionError"></p>
+                </div>
+              </div>
+
+              <button type="submit" class="submit-btn">確認する</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById("landRegistrationForm");
+      const errorMessages = {
+        name: document.getElementById("nameError"),
+        location: document.getElementById("locationError"),
+        area: document.getElementById("areaError"),
+        facilities: document.getElementById("facilitiesError"),
+        description: document.getElementById("descriptionError"),
+        photos: document.getElementById("photosError"),
+        titleDeed: document.getElementById("titleDeedError"),
+      };
+
+      let photosFiles = [];
+      let titleDeedFile = null;
+
+      // その他の設備チェックボックスの制御
+      document
+        .getElementById("facilitiesOtherCheck")
+        .addEventListener("change", function () {
+          const otherInput = document.getElementById("facilitiesOther");
+          if (this.checked) {
+            otherInput.style.display = "block";
+            otherInput.focus();
+          } else {
+            otherInput.style.display = "none";
+            otherInput.value = "";
+          }
+        });
+
+      function showError(field, message) {
+        const input = document.getElementById(field);
+        const errorElement = errorMessages[field];
+
+        if (input) input.classList.add("error");
+        if (errorElement) {
+          errorElement.textContent = message;
+          errorElement.classList.add("show");
+        }
+      }
+
+      function clearError(field) {
+        const input = document.getElementById(field);
+        const errorElement = errorMessages[field];
+
+        if (input) input.classList.remove("error");
+        if (errorElement) {
+          errorElement.textContent = "";
+          errorElement.classList.remove("show");
+        }
+      }
+
+      function clearAllErrors() {
+        Object.keys(errorMessages).forEach(clearError);
+      }
+
+      // 写真プレビュー
+      document
+        .getElementById("photos")
+        .addEventListener("change", function (e) {
+          const files = Array.from(e.target.files);
+          const maxFiles = 10;
+          const maxSize = 5 * 1024 * 1024; // 5MB
+
+          if (files.length > maxFiles) {
+            showError(
+              "photos",
+              `写真は最大${maxFiles}枚までアップロードできます`
+            );
+            e.target.value = "";
+            return;
+          }
+
+          let hasError = false;
+          files.forEach((file) => {
+            if (file.size > maxSize) {
+              showError("photos", "各ファイルのサイズは5MB以下にしてください");
+              hasError = true;
+            }
+          });
+
+          if (hasError) {
+            e.target.value = "";
+            return;
+          }
+
+          photosFiles = files;
+          clearError("photos");
+          renderPhotosPreview();
+        });
+
+      function renderPhotosPreview() {
+        const preview = document.getElementById("photosPreview");
+        preview.innerHTML = "";
+
+        photosFiles.forEach((file, index) => {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const div = document.createElement("div");
+            div.className = "file-preview-item";
+            div.innerHTML = `
+            <img src="${e.target.result}" alt="写真${index + 1}">
+            <div class="file-name">${file.name}</div>
+            <button type="button" class="remove-btn" data-index="${index}">×</button>
+          `;
+            preview.appendChild(div);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      // 写真削除
+      document
+        .getElementById("photosPreview")
+        .addEventListener("click", function (e) {
+          if (e.target.classList.contains("remove-btn")) {
+            const index = parseInt(e.target.dataset.index);
+            photosFiles = photosFiles.filter((_, i) => i !== index);
+            renderPhotosPreview();
+
+            if (photosFiles.length === 0) {
+              document.getElementById("photos").value = "";
+            }
+          }
+        });
+
+      // 権利書プレビュー
+      document
+        .getElementById("titleDeed")
+        .addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          const maxSize = 10 * 1024 * 1024; // 10MB
+
+          if (file && file.size > maxSize) {
+            showError("titleDeed", "ファイルサイズは10MB以下にしてください");
+            e.target.value = "";
+            return;
+          }
+
+          titleDeedFile = file;
+          clearError("titleDeed");
+          renderTitleDeedPreview();
+        });
+
+      function renderTitleDeedPreview() {
+        const preview = document.getElementById("titleDeedPreview");
+        preview.innerHTML = "";
+
+        if (!titleDeedFile) return;
+
+        const div = document.createElement("div");
+        div.className = "file-preview-item";
+
+        if (titleDeedFile.type.startsWith("image/")) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            div.innerHTML = `
+            <img src="${e.target.result}" alt="権利書">
+            <div class="file-name">${titleDeedFile.name}</div>
+            <button type="button" class="remove-btn" id="removeTitleDeed">×</button>
+          `;
+            preview.appendChild(div);
+          };
+          reader.readAsDataURL(titleDeedFile);
+        } else {
+          div.innerHTML = `
+          <div style="padding: 40px 8px; color: var(--text-hint);">📄</div>
+          <div class="file-name">${titleDeedFile.name}</div>
+          <button type="button" class="remove-btn" id="removeTitleDeed">×</button>
+        `;
+          preview.appendChild(div);
+        }
+      }
+
+      // 権利書削除
+      document
+        .getElementById("titleDeedPreview")
+        .addEventListener("click", function (e) {
+          if (e.target.id === "removeTitleDeed") {
+            titleDeedFile = null;
+            document.getElementById("titleDeed").value = "";
+            document.getElementById("titleDeedPreview").innerHTML = "";
+          }
+        });
+
+      function validateForm() {
+        clearAllErrors();
+        let isValid = true;
+
+        // 所在地
+        const location = document.getElementById("location").value.trim();
+        if (!location) {
+          showError("location", "所在地を入力してください");
+          isValid = false;
+        }
+
+        // 面積
+        const area = document.getElementById("area").value;
+        if (!area || parseFloat(area) <= 0) {
+          showError("area", "面積を正しく入力してください");
+          isValid = false;
+        }
+
+        // 設備
+        const facilities = document.querySelectorAll(
+          'input[name="facilities"]:checked'
+        );
+        if (facilities.length === 0) {
+          showError("facilities", "設備を最低1つ選択してください");
+          isValid = false;
+        }
+
+        // その他の設備が選択されている場合、テキスト入力をチェック
+        const otherCheck = document.getElementById("facilitiesOtherCheck");
+        const otherInput = document.getElementById("facilitiesOther");
+        if (otherCheck.checked && !otherInput.value.trim()) {
+          showError("facilities", "その他の設備内容を入力してください");
+          isValid = false;
+        }
+
+        // 写真
+        if (photosFiles.length === 0) {
+          showError("photos", "写真を最低1枚アップロードしてください");
+          isValid = false;
+        }
+
+        // 名前
+        const name = document.getElementById("name").value.trim();
+        if (!name) {
+          showError("name", "名前を入力してください");
+          isValid = false;
+        } else if (name.length > 50) {
+          showError("name", "名前は50文字以内で入力してください");
+          isValid = false;
+        }
+
+        // 権利書
+        if (!titleDeedFile) {
+          showError("titleDeed", "土地の権利書をアップロードしてください");
+          isValid = false;
+        }
+
+        // 説明（任意なのでバリデーション不要）
+        const description = document.getElementById("description").value.trim();
+        if (description.length > 1000) {
+          showError("description", "説明は1000文字以内で入力してください");
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      // リアルタイムバリデーション
+      ["location", "area", "name", "description"].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.addEventListener("blur", () => {
+            if (input.value) clearError(id);
+          });
+        }
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        if (validateForm()) {
+          const submitBtn = form.querySelector(".submit-btn");
+          submitBtn.disabled = true;
+          submitBtn.textContent = "確認画面へ...";
+
+          // フォームデータを収集
+          const formData = {
+            location: document.getElementById("location").value.trim(),
+            area: document.getElementById("area").value,
+            facilities: Array.from(
+              document.querySelectorAll('input[name="facilities"]:checked')
+            ).map((cb) => {
+              const labels = {
+                water: "水道",
+                electricity: "電気",
+                parking: "駐車スペース",
+                storage: "倉庫",
+                toilet: "トイレ",
+                fence: "フェンス",
+                roof: "屋根",
+                none: "なし",
+                other:
+                  document.getElementById("facilitiesOther").value.trim() ||
+                  "その他",
+              };
+              return labels[cb.value] || cb.value;
+            }),
+            photos: photosFiles,
+            price: document.getElementById("price").value,
+            name: document.getElementById("name").value.trim(),
+            titleDeed: titleDeedFile,
+            description: document.getElementById("description").value.trim(),
+          };
+
+          // データをsessionStorageに保存
+          // 注: ファイルオブジェクトは保存できないので、実際のアプリでは別の方法が必要
+          sessionStorage.setItem(
+            "landRegistrationData",
+            JSON.stringify({
+              location: formData.location,
+              area: formData.area,
+              facilities: formData.facilities,
+              price: formData.price,
+              name: formData.name,
+              description: formData.description,
+            })
+          );
+
+          console.log("確認画面に遷移:", formData);
+
+          // 実際には確認画面にリダイレクト
+          setTimeout(() => {
+            // window.location.href = 'land-confirmation.html';
+            alert(
+              "確認画面に遷移します（実装時は Land confirmation.html に遷移）"
+            );
+            submitBtn.disabled = false;
+            submitBtn.textContent = "確認する";
+          }, 800);
+        } else {
+          // 最初のエラーフィールドまでスクロール
+          const firstError = document.querySelector(".form-control.error");
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }
+      });
+    </script>
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">スキマパーク</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">利用規約</a>
+            <a href="#" class="footer-link">プライバシーポリシー</a>
+            <a href="#" class="footer-link">ヘルプ</a>
+            <a href="#" class="footer-link">お問い合わせ</a>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

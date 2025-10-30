@@ -1,0 +1,568 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>レンタル確認・決済 - スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .container-wide {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32; /* index.htmlと共通のテーマカラー */
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: #2e7d32; /* index.htmlと共通のテーマカラー */
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20; /* index.htmlと共通のテーマカラー */
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .btn-outline {
+        background: #fff;
+        color: #2e7d32;
+        border: 1px solid #2e7d32;
+      }
+      .btn-outline:hover {
+        background: #f1f8e9;
+      }
+      .btn-large {
+        padding: 12px 24px;
+        font-size: 16px;
+        width: 100%;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+      .icon-btn:hover {
+        background: #e0e0e0;
+      }
+      .breadcrumb {
+        padding: 20px 0;
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .breadcrumb-list {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        flex-wrap: wrap;
+      }
+      .breadcrumb-item {
+        color: #666;
+        text-decoration: none;
+      }
+      .breadcrumb-item:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+      }
+      .breadcrumb-separator {
+        color: #999;
+      }
+      .breadcrumb-current {
+        color: #333;
+        font-weight: 500;
+      }
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #2e7d32;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 20px;
+      }
+      .back-link:hover {
+        text-decoration: underline;
+      }
+      .section {
+        padding: 40px 0;
+      }
+      .detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 40px;
+        margin-top: 20px;
+      }
+      .detail-main {
+        flex: 1;
+      }
+      .detail-sidebar {
+        position: sticky;
+        top: 80px;
+        height: fit-content;
+      }
+      .page-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 20px;
+      }
+
+      /* 決済ページ用に流用 */
+      .info-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 24px;
+        border: 1px solid #e0e0e0;
+        margin-bottom: 20px;
+      }
+      .info-card-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .info-row {
+        display: flex;
+        justify-content: space-between; /* 決済概要用に変更 */
+        padding: 12px 0;
+        border-bottom: 1px solid #f5f5f5;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-label {
+        font-weight: 500;
+        color: #555;
+        min-width: 100px; /* 少し調整 */
+        font-size: 14px;
+      }
+      .info-value {
+        color: #333;
+        font-size: 14px;
+        font-weight: 500; /* 概要なので少し強調 */
+        text-align: right;
+      }
+
+      .summary-image {
+        width: 100%;
+        height: 120px;
+        border-radius: 6px;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 14px;
+        margin-bottom: 16px;
+      }
+      .summary-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 16px;
+      }
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+      }
+      .total-label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #222;
+      }
+      .total-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2e7d32;
+      }
+
+      .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* index.html/土地詳細画面.htmlから流用したフォームスタイル */
+      .form-group {
+        margin-bottom: 16px;
+        text-align: left;
+      }
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: #555;
+      }
+      .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: #2e7d32;
+      }
+      .form-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      /* 土地詳細画面から流用 */
+      footer {
+        background: #fff;
+        border-top: 1px solid #e0e0e0;
+        padding: 40px 0;
+        margin-top: 60px;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer-logo {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2e7d32;
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-link {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      .footer-link:hover {
+        color: #2e7d32;
+        text-decoration: underline;
+      }
+      .footer-copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #999;
+      }
+
+      @media (max-width: 768px) {
+        .page-title {
+          font-size: 22px;
+        }
+        .detail-layout {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        .detail-sidebar {
+          position: static;
+        }
+        .form-grid-2 {
+          grid-template-columns: 1fr;
+        }
+        .footer-content {
+          flex-direction: column;
+          gap: 16px;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="index.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="#" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="breadcrumb">
+      <div class="container">
+        <nav class="breadcrumb-list">
+          <a href="index.html" class="breadcrumb-item">トップ</a>
+          <span class="breadcrumb-separator">›</span>
+          <a href="検索結果表示画面.html" class="breadcrumb-item"
+            >検索結果</a
+          >
+          <span class="breadcrumb-separator">›</span>
+          <a href="土地詳細画面.html" class="breadcrumb-item"
+            >世田谷区A邸 駐輪スペース</a
+          >
+          <span class="breadcrumb-separator">›</span>
+          <span class="breadcrumb-current">レンタル確認・決済</span>
+        </nav>
+      </div>
+    </div>
+
+    <main>
+      <div class="section">
+        <div class="container-wide">
+          <a href="土地詳細画面.html" class="back-link">
+            ← 土地詳細に戻る
+          </a>
+
+          <h1 class="page-title">レンタル確認・決済</h1>
+
+          <div class="detail-layout">
+            <div class="detail-main">
+              <div class="info-card">
+                <h2 class="info-card-title">お支払い情報</h2>
+                <form>
+                  <div class="form-group">
+                    <label for="email">メールアドレス</label>
+                    <input
+                      type="email"
+                      id="email"
+                      class="form-control"
+                      placeholder="example@sukimapark.com"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">電話番号</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      class="form-control"
+                      placeholder="090-1234-5678"
+                    />
+                  </div>
+                </form>
+              </div>
+
+              <div class="info-card">
+                <h2 class="info-card-title">クレジットカード情報</h2>
+                <form>
+                  <div class="form-group">
+                    <label for="card-number">カード番号</label>
+                    <input
+                      type="text"
+                      id="card-number"
+                      class="form-control"
+                      placeholder="4980 1234 5678 9012"
+                    />
+                  </div>
+                  <div class="form-grid-2">
+                    <div class="form-group">
+                      <label for="card-expiry">有効期限</label>
+                      <input
+                        type="text"
+                        id="card-expiry"
+                        class="form-control"
+                        placeholder="MM / YY"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="card-cvc">セキュリティコード (CVC)</label>
+                      <input
+                        type="text"
+                        id="card-cvc"
+                        class="form-control"
+                        placeholder="123"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="card-name">カード名義人</label>
+                    <input
+                      type="text"
+                      id="card-name"
+                      class="form-control"
+                      placeholder="TARO SUKIMA"
+                    />
+                  </div>
+                </form>
+              </div>
+
+              <div class="info-card">
+                <h2 class="info-card-title">請求先住所</h2>
+                <form>
+                  <div class="form-group">
+                    <label for="zip-code">郵便番号</label>
+                    <input
+                      type="text"
+                      id="zip-code"
+                      class="form-control"
+                      placeholder="123-4567"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="prefecture">都道府県</label>
+                    <select id="prefecture" class="form-control">
+                      <option value="">都道府県を選択</option>
+                      <option>東京都</option>
+                      <option>神奈川県</option>
+                      </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="city">市区町村</label>
+                    <input
+                      type="text"
+                      id="city"
+                      class="form-control"
+                      placeholder="世田谷区"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="address-line1">番地・建物名など</label>
+                    <input
+                      type="text"
+                      id="address-line1"
+                      class="form-control"
+                      placeholder="桜新町1-2-3 スキマビル101"
+                    />
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="detail-sidebar">
+              <div class="info-card">
+                <h2 class="info-card-title">ご予約内容</h2>
+
+                <div class="summary-image">[土地の写真]</div>
+                <h3 class="summary-title">世田谷区A邸 駐輪スペース</h3>
+
+                <div class="info-row">
+                  <span class="info-label">利用開始</span>
+                  <span class="info-value">2025/11/01 09:00</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">利用終了</span>
+                  <span class="info-value">2025/11/30 18:00</span>
+                </div>
+
+                <div
+                  style="
+                    margin-top: 20px;
+                    padding-top: 20px;
+                    border-top: 1px solid #f0f0f0;
+                  "
+                >
+                  <div class="info-row">
+                    <span class="info-label">月額利用料</span>
+                    <span class="info-value">¥25,000</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">サービス料</span>
+                    <span class="info-value">¥2,500</span>
+                  </div>
+                  <div class="info-row">
+                    <span class="info-label">初期費用</span>
+                    <span class="info-value">¥0</span>
+                  </div>
+                </div>
+
+                <div class="total-row">
+                  <span class="total-label">合計金額</span>
+                  <span class="total-value">¥27,500</span>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 24px">
+                  <button class="btn btn-primary btn-large">
+                    上記の内容で決済する
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-logo">スキマパーク</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">利用規約</a>
+            <a href="#" class="footer-link">プライバシーポリシー</a>
+            <a href="#" class="footer-link">ヘルプ</a>
+            <a href="#" class="footer-link">お問い合わせ</a>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

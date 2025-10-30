@@ -1,0 +1,466 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>土地貸出設定 | スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      main {
+        padding: 40px 0 60px;
+      }
+      .page-header {
+        margin-bottom: 32px;
+      }
+      .page-header h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #222;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 24px;
+      }
+      .panel {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 24px;
+      }
+      .panel h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 16px;
+      }
+      .form-group {
+        margin-bottom: 18px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #444;
+      }
+      .form-control {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: inherit;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: #2e7d32;
+        box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.1);
+      }
+      textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+      }
+      .grid-two {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+      }
+      .inline {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .inline label {
+        margin-bottom: 0;
+        font-weight: 500;
+      }
+      .hint {
+        color: #777;
+        font-size: 12px;
+        margin-top: 6px;
+      }
+      .upload-box {
+        border: 2px dashed #c5e1a5;
+        border-radius: 8px;
+        padding: 18px;
+        text-align: center;
+        color: #2e7d32;
+        background: #f1f8e9;
+        font-size: 14px;
+      }
+      .checkbox-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: normal;
+      }
+      .checkbox-label input[type="checkbox"] {
+        cursor: pointer;
+        accent-color: #2e7d32;
+      }
+      .status-toggle {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 8px;
+        background: #e8f5e9;
+        border: 1px solid #c5e1a5;
+      }
+      .status-toggle strong {
+        color: #1b5e20;
+        font-size: 14px;
+      }
+      .summary {
+        display: grid;
+        gap: 12px;
+        font-size: 14px;
+      }
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px dashed #e0e0e0;
+        padding-bottom: 6px;
+      }
+      .sticky {
+        position: sticky;
+        top: 88px;
+      }
+      @media (max-width: 960px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .sticky {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="home_screen.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="land_register_form_screen.html" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="container">
+        <div class="page-header">
+          <h1>土地貸出設定</h1>
+          <p style="color: #555; margin-top: 8px">
+            公開前に必要な情報を入力し、貸出条件を確定してください。保存後に公開
+            ステータスを「公開」に変更すると募集が開始されます。
+          </p>
+        </div>
+
+        <div class="layout">
+          <form class="panel" style="display: grid; gap: 24px">
+            <section>
+              <h2>基本情報</h2>
+              <div class="form-group">
+                <label>土地名</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="例: 都市型ポップアップスペース"
+                />
+              </div>
+              <div class="form-group">
+                <label>所在地</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="例: 東京都中央区日本橋1-2-3"
+                />
+                <p class="hint">町名・番地・建物名まで入力してください。</p>
+              </div>
+              <div class="grid-two">
+                <div class="form-group">
+                  <label>面積</label>
+                  <input type="text" class="form-control" placeholder="例: 80㎡" />
+                </div>
+                <div class="form-group">
+                  <label>推奨利用人数</label>
+                  <input type="text" class="form-control" placeholder="例: 〜60名" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>設備</label>
+                <div class="checkbox-group">
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="facilities" value="water" />
+                    <span>水道</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="facilities" value="electricity" />
+                    <span>電気</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="facilities" value="parking" />
+                    <span>駐車スペース</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="facilities" value="storage" />
+                    <span>倉庫</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="facilities" value="toilet" />
+                    <span>トイレ</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="facilities" value="fence" />
+                    <span>フェンス</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="facilities" value="roof" />
+                    <span>屋根</span>
+                  </label>
+                  <label class="checkbox-label">
+                    <input type="checkbox" name="facilities" value="none" />
+                    <span>なし</span>
+                  </label>
+                </div>
+                <div style="margin-top: 12px">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="facilitiesOtherCheck" name="facilities" value="other" />
+                    <span>その他</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="facilitiesOther"
+                    class="form-control"
+                    placeholder="その他の設備を入力してください"
+                    style="margin-top: 8px; display: none"
+                    maxlength="100"
+                  />
+                </div>
+                <p class="hint">利用可能な設備をすべて選択してください</p>
+              </div>
+              <div class="form-group">
+                <label>写真</label>
+                <div class="upload-box">
+                  画像をドラッグ＆ドロップするか、クリックしてアップロード
+                </div>
+                <p class="hint">推奨: 横向き写真を5枚まで / 1枚あたり5MB以内</p>
+              </div>
+            </section>
+
+            <section>
+              <h2>貸出条件</h2>
+              <div class="form-group">
+                <label>貸出受付期間</label>
+                <input type="text" class="form-control" placeholder="期間を選択してください" />
+                <p class="hint">カレンダーで開始日と終了日を選択してください</p>
+              </div>
+              <div class="grid-two">
+                <div class="form-group">
+                  <label>貸出時間（開始）</label>
+                  <input type="time" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label>貸出時間（終了）</label>
+                  <input type="time" class="form-control" />
+                </div>
+              </div>
+              <div class="grid-two">
+                <div class="form-group">
+                  <label>賃料（税抜）</label>
+                  <input type="text" class="form-control" placeholder="例: 20,000" />
+                </div>
+                <div class="form-group">
+                  <label>料金単位</label>
+                  <select class="form-control">
+                    <option>日あたり</option>
+                    <option>月あたり</option>
+                    <option>時間あたり</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>追加料金 / 注意事項</label>
+                <textarea
+                  class="form-control"
+                  placeholder="例: 定期利用の場合は別途見積もりします。音響設備は有料。"
+                ></textarea>
+              </div>
+            </section>
+
+            <section>
+              <h2>説明</h2>
+              <div class="form-group">
+                <label>キャッチコピー</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="例: 都心でアクセス抜群の屋上イベントスペース"
+                />
+              </div>
+              <div class="form-group">
+                <label>詳細説明</label>
+                <textarea
+                  class="form-control"
+                  placeholder="利用想定や禁止事項などを詳しく記載してください。"
+                  style="min-height: 160px"
+                ></textarea>
+              </div>
+            </section>
+
+            <section style="display: flex; justify-content: flex-end; gap: 12px">
+              <a href="my-lands.html" class="btn btn-secondary">下書き保存</a>
+              <a href="land-rental-active.html" class="btn btn-primary">公開ステータスを変更</a>
+            </section>
+          </form>
+
+          <aside class="panel sticky" style="display: grid; gap: 20px">
+            <section class="status-toggle">
+              <strong>公開ステータス: 非公開</strong>
+              <p style="font-size: 13px; color: #2e7d32">
+                ステータスを「公開」に変更すると公開ページが作成され、募集が開始されます。
+              </p>
+              <a href="land-rental-active.html" class="btn btn-primary" style="justify-content: center">公開に切り替える</a>
+            </section>
+            <section>
+              <h2>公開プレビュー</h2>
+              <div class="summary">
+                <div class="summary-item">
+                  <span>土地名</span>
+                  <span>未入力</span>
+                </div>
+                <div class="summary-item">
+                  <span>所在地</span>
+                  <span>未入力</span>
+                </div>
+                <div class="summary-item">
+                  <span>料金</span>
+                  <span>未入力</span>
+                </div>
+                <div class="summary-item">
+                  <span>受付期間</span>
+                  <span>未入力</span>
+                </div>
+              </div>
+              <p class="hint" style="margin-top: 12px">
+                入力した内容はリアルタイムでプレビューに反映されます。
+              </p>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </main>
+      <footer>
+      <div class=\"container\">
+        <div class=\"footer-content\">
+          <div class=\"footer-logo\">スキマパーク</div>
+          <div class=\"footer-links\">
+            <a href=\"#\" class=\"footer-link\">利用規約</a>
+            <a href=\"#\" class=\"footer-link\">プライバシーポリシー</a>
+            <a href=\"#\" class=\"footer-link\">ヘルプ</a>
+            <a href=\"#\" class=\"footer-link\">お問い合わせ</a>
+          </div>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // その他の設備チェックボックスの制御
+      document
+        .getElementById("facilitiesOtherCheck")
+        .addEventListener("change", function () {
+          const otherInput = document.getElementById("facilitiesOther");
+          if (this.checked) {
+            otherInput.style.display = "block";
+            otherInput.focus();
+          } else {
+            otherInput.style.display = "none";
+            otherInput.value = "";
+          }
+        });
+    </script>
+  </body>
+</html>

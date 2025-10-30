@@ -1,0 +1,461 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ユーザ画面（他アカウント） | スキマパーク</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: #fafafa;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2e7d32;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: #1b5e20;
+      }
+      .btn-secondary {
+        background: #f5f5f5;
+        color: #333;
+      }
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f5f5f5;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+      }
+      .icon-btn:hover {
+        background: #e0e0e0;
+      }
+      main {
+        padding-bottom: 60px;
+      }
+      .profile-cover {
+        background: linear-gradient(120deg, #c8e6c9, #a5d6a7);
+        height: 160px;
+      }
+      .profile-wrapper {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-top: none;
+      }
+      .profile-inner {
+        display: flex;
+        gap: 20px;
+        padding: 24px 20px;
+        position: relative;
+        margin-top: -50px;
+      }
+      .avatar {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        background: #dcedc8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        color: #2e7d32;
+      }
+      .profile-info {
+        flex: 1;
+      }
+      .profile-meta {
+        display: flex;
+        gap: 16px;
+        margin-top: 8px;
+        color: #666;
+        font-size: 14px;
+      }
+      .profile-stats {
+        display: flex;
+        gap: 24px;
+        margin-top: 16px;
+      }
+      .profile-stats span {
+        font-weight: 600;
+        color: #2e7d32;
+      }
+      .profile-actions {
+        margin-top: 18px;
+        display: flex;
+        gap: 12px;
+      }
+      .note {
+        margin-top: 16px;
+        padding: 12px 16px;
+        background: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        border-radius: 6px;
+        font-size: 13px;
+      }
+      .section {
+        padding: 36px 0;
+      }
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      .section-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #222;
+      }
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e0e0e0;
+        position: relative;
+        transition: box-shadow 0.2s;
+        text-decoration: none;
+        color: inherit;
+      }
+      .card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .card-image {
+        width: 100%;
+        height: 150px;
+        background: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-size: 14px;
+      }
+      .like-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 20px;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+      }
+      .like-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      .like-btn.liked {
+        color: #e91e63;
+      }
+      .card-body {
+        padding: 16px;
+      }
+      .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #222;
+      }
+      .card-text {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 12px;
+      }
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 14px;
+        color: #2e7d32;
+      }
+      .tag {
+        background: #e8f5e9;
+        color: #2e7d32;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .review-section {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 24px;
+        margin-top: 20px;
+      }
+      .review-item {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 20px 0;
+      }
+      .review-item:last-child {
+        border-bottom: none;
+      }
+      .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .review-author {
+        font-weight: 600;
+        color: #222;
+      }
+      .review-date {
+        color: #999;
+        font-size: 13px;
+      }
+      .review-rating {
+        color: #ffa726;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+      .review-text {
+        color: #555;
+        line-height: 1.6;
+      }
+      @media (max-width: 768px) {
+        .profile-inner {
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .profile-actions {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="home_screen.html" class="logo">スキマパーク</a>
+        <div class="header-nav">
+          <a href="land_register_form_screen.html" class="btn btn-primary">土地を登録</a>
+          <button class="icon-btn" title="メッセージ">💬</button>
+          <button class="icon-btn" title="アカウント">👤</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="profile-cover"></div>
+      <section class="container profile-wrapper">
+        <div class="profile-inner">
+          <div class="avatar">G</div>
+          <div class="profile-info">
+            <h1 style="font-size: 24px; font-weight: 700; color: #222">
+              グリーンファーム合同会社
+            </h1>
+            <div class="profile-meta">
+              <span>@greenfarm_official</span>
+              <span>拠点: 北海道・富良野市</span>
+            </div>
+            <p style="margin-top: 12px; color: #555">
+              観光農園とイベント向けのスペースを展開しています。企業研修向けの
+              貸し出しプランもご相談ください。
+            </p>
+            <div class="profile-stats">
+              <div>公開土地 <span>4件</span></div>
+              <div>評価 <span>4.8</span></div>
+              <div>フォロワー <span>512人</span></div>
+            </div>
+            <div class="profile-actions">
+              <a href="#" class="btn btn-primary">フォロー</a>
+              <a href="dm-new.html" class="btn btn-secondary">DMを送る</a>
+            </div>
+            <div class="note">
+              他アカウントでは公開されている土地のみ閲覧できます。非公開情報や
+              設定項目へのアクセスは制限されています。
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <h2 class="section-title">公開されている土地</h2>
+          </div>
+          <div class="card-grid">
+            <a href="land-detail.html" class="card">
+              <button class="like-btn" onclick="this.classList.toggle('liked'); event.stopPropagation(); event.preventDefault();">♡</button>
+              <div class="card-image">土地写真</div>
+              <div class="card-body">
+                <div class="tag">北海道・富良野市</div>
+                <h3 class="card-title">ラベンダービューサイト</h3>
+                <p class="card-text">
+                  ラベンダー畑を見渡す高台スペース。撮影会やナイトイベントに人気。
+                </p>
+                <div class="card-footer">
+                  <span>¥35,000 / 日</span>
+                  <span>面積: 250㎡</span>
+                </div>
+              </div>
+            </a>
+            <a href="land-detail.html" class="card">
+              <button class="like-btn" onclick="this.classList.toggle('liked'); event.stopPropagation(); event.preventDefault();">♡</button>
+              <div class="card-image">土地写真</div>
+              <div class="card-body">
+                <div class="tag">北海道・旭川市</div>
+                <h3 class="card-title">ウィンターフェス広場</h3>
+                <p class="card-text">
+                  冬季はイルミネーション設備が利用可能。シーズンイベント向け。
+                </p>
+                <div class="card-footer">
+                  <span>¥50,000 / 日</span>
+                  <span>面積: 320㎡</span>
+                </div>
+              </div>
+            </a>
+            <a href="land-detail.html" class="card">
+              <button class="like-btn" onclick="this.classList.toggle('liked'); event.stopPropagation(); event.preventDefault();">♡</button>
+              <div class="card-image">土地写真</div>
+              <div class="card-body">
+                <div class="tag">北海道・帯広市</div>
+                <h3 class="card-title">ファームロッジスペース</h3>
+                <p class="card-text">
+                  小規模セミナーや宿泊研修向けのエリア。キッチン・水道完備。
+                </p>
+                <div class="card-footer">
+                  <span>¥80,000 / 日</span>
+                  <span>面積: 400㎡</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <h2 class="section-title">レビュー・コメント</h2>
+          <div class="review-section">
+            <div class="review-item">
+              <div class="review-header">
+                <span class="review-author">田中 一郎</span>
+                <span class="review-date">2025/10/15</span>
+              </div>
+              <div class="review-rating">★★★★★</div>
+              <p class="review-text">
+                素晴らしい土地でした。交通アクセスも良く、設備も充実していて大変満足しています。
+                オーナーの対応も丁寧で、また利用したいと思います。
+              </p>
+            </div>
+            <div class="review-item">
+              <div class="review-header">
+                <span class="review-author">佐藤 美咲</span>
+                <span class="review-date">2025/10/08</span>
+              </div>
+              <div class="review-rating">★★★★☆</div>
+              <p class="review-text">
+                広々としたスペースで、イベント開催に最適でした。
+                周辺環境も静かで、参加者からも好評でした。
+              </p>
+            </div>
+            <div class="review-item">
+              <div class="review-header">
+                <span class="review-author">山田 健太</span>
+                <span class="review-date">2025/09/28</span>
+              </div>
+              <div class="review-rating">★★★★★</div>
+              <p class="review-text">
+                清潔で管理が行き届いており、安心して利用できました。
+                駐車スペースも十分にあり、とても便利でした。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+      <footer>
+      <div class=\"container\">
+        <div class=\"footer-content\">
+          <div class=\"footer-logo\">スキマパーク</div>
+          <div class=\"footer-links\">
+            <a href=\"#\" class=\"footer-link\">利用規約</a>
+            <a href=\"#\" class=\"footer-link\">プライバシーポリシー</a>
+            <a href=\"#\" class=\"footer-link\">ヘルプ</a>
+            <a href=\"#\" class=\"footer-link\">お問い合わせ</a>
+          </div>
+        </div>
+        <div class=\"footer-copyright\">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+</body>
+</html>

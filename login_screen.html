@@ -1,0 +1,571 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="スキマパークログインページ" />
+    <title>スキマパーク - ログイン</title>
+    <link rel="stylesheet" href="common.css" />
+    <style>
+      :root {
+        --primary-color: #2e7d32;
+        --primary-hover: #1b5e20;
+        --error-color: #d32f2f;
+        --border-color: #e0e0e0;
+        --text-primary: #333;
+        --text-secondary: #555;
+        --text-hint: #888;
+        --bg-page: #fafafa;
+        --bg-white: #fff;
+        --bg-secondary: #f5f5f5;
+        --bg-hover: #e0e0e0;
+        --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --border-radius: 6px;
+        --transition: all 0.2s;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Hiragino Sans", sans-serif;
+        line-height: 1.6;
+        color: var(--text-primary);
+        background: var(--bg-page);
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Header */
+      header {
+        background: var(--bg-white);
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 60px;
+      }
+
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      .header-nav {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      /* Buttons */
+      .btn {
+        padding: 8px 16px;
+        border-radius: var(--border-radius);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .btn-primary {
+        background: var(--primary-color);
+        color: var(--bg-white);
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-hover);
+      }
+
+      .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+
+      .btn-secondary:hover {
+        background: var(--bg-hover);
+      }
+
+      /* Form */
+      .login-section {
+        padding: 60px 0;
+        min-height: calc(100vh - 60px);
+        display: flex;
+        align-items: center;
+      }
+
+      .form-container {
+        background: var(--bg-white);
+        border-radius: 8px;
+        padding: 40px;
+        box-shadow: var(--shadow);
+        max-width: 480px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .form-container h1 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #222;
+        text-align: center;
+      }
+
+      .form-subtitle {
+        text-align: center;
+        color: var(--text-hint);
+        font-size: 14px;
+        margin-bottom: 32px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: var(--text-secondary);
+      }
+
+      .required {
+        color: var(--error-color);
+        font-size: 12px;
+        margin-left: 4px;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.2s;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+      }
+
+      .form-control.error {
+        border-color: var(--error-color);
+      }
+
+      .error-message {
+        font-size: 12px;
+        color: var(--error-color);
+        margin-top: 4px;
+        display: none;
+      }
+
+      .error-message.show {
+        display: block;
+      }
+
+      .general-error {
+        background: #ffebee;
+        color: var(--error-color);
+        padding: 12px;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        display: none;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .general-error.show {
+        display: block;
+      }
+
+      /* Password options */
+      .password-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+        font-size: 13px;
+      }
+
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        color: var(--text-secondary);
+      }
+
+      .remember-me input[type="checkbox"] {
+        cursor: pointer;
+        accent-color: var(--primary-color);
+      }
+
+      .forgot-password {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .forgot-password:hover {
+        text-decoration: underline;
+      }
+
+      /* Submit button */
+      .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary-color);
+        color: var(--bg-white);
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 24px;
+        transition: var(--transition);
+      }
+
+      .submit-btn:hover:not(:disabled) {
+        background: var(--primary-hover);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      /* Divider */
+      .divider {
+        text-align: center;
+        margin: 24px 0;
+        position: relative;
+      }
+
+      .divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--border-color);
+      }
+
+      .divider span {
+        background: var(--bg-white);
+        padding: 0 16px;
+        color: var(--text-hint);
+        font-size: 13px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Register link */
+      .register-link {
+        text-align: center;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      .register-link a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .register-link a:hover {
+        text-decoration: underline;
+      }
+
+      /* Success message */
+      .success-message {
+        background: #e8f5e9;
+        color: var(--primary-color);
+        padding: 12px;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        display: none;
+        text-align: center;
+      }
+
+      .success-message.show {
+        display: block;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header-nav {
+          gap: 8px;
+        }
+
+        .btn {
+          padding: 6px 12px;
+          font-size: 13px;
+        }
+
+        .login-section {
+          padding: 40px 0;
+        }
+
+        .form-container {
+          padding: 32px 24px;
+        }
+
+        .form-container h1 {
+          font-size: 22px;
+        }
+
+        .password-options {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container header-inner">
+        <a href="home_screen.html" class="logo">スキマパーク</a>
+        <nav class="header-nav">
+          <a href="register_screen.html" class="btn btn-primary">会員登録</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="login-section">
+        <div class="container">
+          <div class="form-container">
+            <h1>ログイン</h1>
+            <p class="form-subtitle">アカウントにログインしてください</p>
+
+            <div class="success-message" id="successMessage">
+              ログインに成功しました！
+            </div>
+
+            <div class="general-error" id="generalError">
+              ログインIDまたはパスワードが正しくありません
+            </div>
+
+            <form id="loginForm" novalidate>
+              <div class="form-group">
+                <label for="loginId"
+                  >ログインID<span class="required">必須</span></label
+                >
+                <input
+                  type="text"
+                  id="loginId"
+                  class="form-control"
+                  placeholder="ログインIDを入力"
+                  required
+                  autocomplete="username"
+                />
+                <p class="error-message" id="loginIdError"></p>
+              </div>
+
+              <div class="form-group">
+                <label for="password"
+                  >パスワード<span class="required">必須</span></label
+                >
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  placeholder="パスワードを入力"
+                  required
+                  autocomplete="current-password"
+                />
+                <p class="error-message" id="passwordError"></p>
+              </div>
+
+              <div class="password-options">
+                <label class="remember-me">
+                  <input type="checkbox" id="rememberMe" />
+                  <span>ログイン状態を保持する</span>
+                </label>
+                <a href="#" class="forgot-password"
+                  >パスワードをお忘れですか？</a
+                >
+              </div>
+
+              <button type="submit" class="submit-btn">ログイン</button>
+            </form>
+
+            <div class="divider">
+              <span>または</span>
+            </div>
+
+            <div class="register-link">
+              アカウントをお持ちでない方は
+              <a href="register_screen.html">新規登録</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const form = document.getElementById("loginForm");
+      const errorMessages = {
+        loginId: document.getElementById("loginIdError"),
+        password: document.getElementById("passwordError"),
+      };
+      const generalError = document.getElementById("generalError");
+      const successMessage = document.getElementById("successMessage");
+
+      function showError(field, message) {
+        const input = document.getElementById(field);
+        const errorElement = errorMessages[field];
+
+        if (input) input.classList.add("error");
+        if (errorElement) {
+          errorElement.textContent = message;
+          errorElement.classList.add("show");
+        }
+      }
+
+      function clearError(field) {
+        const input = document.getElementById(field);
+        const errorElement = errorMessages[field];
+
+        if (input) input.classList.remove("error");
+        if (errorElement) {
+          errorElement.textContent = "";
+          errorElement.classList.remove("show");
+        }
+      }
+
+      function clearAllErrors() {
+        Object.keys(errorMessages).forEach(clearError);
+        generalError.classList.remove("show");
+        successMessage.classList.remove("show");
+      }
+
+      function validateForm() {
+        clearAllErrors();
+        let isValid = true;
+
+        // ログインID
+        const loginId = document.getElementById("loginId").value.trim();
+        if (!loginId) {
+          showError("loginId", "ログインIDを入力してください");
+          isValid = false;
+        }
+
+        // パスワード
+        const password = document.getElementById("password").value;
+        if (!password) {
+          showError("password", "パスワードを入力してください");
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      // リアルタイムバリデーション
+      ["loginId", "password"].forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.addEventListener("input", () => {
+            if (input.value) {
+              clearError(id);
+              generalError.classList.remove("show");
+            }
+          });
+        }
+      });
+
+      // Enterキーでログイン
+      form.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          form.dispatchEvent(new Event("submit"));
+        }
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        if (validateForm()) {
+          // 送信ボタンを無効化
+          const submitBtn = form.querySelector(".submit-btn");
+          submitBtn.disabled = true;
+          submitBtn.textContent = "ログイン中...";
+
+          // 実際のAPI送信処理をここに実装
+          // ダミーのログイン処理（実際にはサーバーサイドで認証）
+          setTimeout(() => {
+            const loginId = document.getElementById("loginId").value.trim();
+            const password = document.getElementById("password").value;
+
+            // ダミー認証（実際には削除してAPIに接続）
+            if (loginId === "demo" && password === "password") {
+              successMessage.classList.add("show");
+              console.log("ログイン成功");
+
+              // ホーム画面にリダイレクト
+              setTimeout(() => {
+                window.location.href = 'home_screen.html';
+              }, 1000);
+            } else {
+              generalError.classList.add("show");
+              submitBtn.disabled = false;
+              submitBtn.textContent = "ログイン";
+            }
+          }, 800);
+        }
+      });
+
+      // パスワード忘れリンク
+      document
+        .querySelector(".forgot-password")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          alert("パスワードリセット機能は実装中です");
+        });
+    </script>
+      <footer>
+      <div class=\"container\">
+        <div class=\"footer-content\">
+          <div class=\"footer-logo\">スキマパーク</div>
+          <div class=\"footer-links\">
+            <a href=\"#\" class=\"footer-link\">利用規約</a>
+            <a href=\"#\" class=\"footer-link\">プライバシーポリシー</a>
+            <a href=\"#\" class=\"footer-link\">ヘルプ</a>
+            <a href=\"#\" class=\"footer-link\">お問い合わせ</a>
+          </div>
+        </div>
+        <div class=\"footer-copyright\">
+          &copy; 2025 スキマパーク All rights reserved.
+        </div>
+      </div>
+    </footer>
+</body>
+</html>
